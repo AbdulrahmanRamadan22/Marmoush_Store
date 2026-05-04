@@ -162,11 +162,18 @@ The client displays products, categories, and banners dynamically, while the das
 
 ---
 
+## Design & UI Rules
+
+* Theme: Strictly follow the premium Dark Mode theme colors provided in reference screenshots (Navy/Dark Blue backgrounds, vibrant accents).
+* Language: The entire website (Client and Dashboard) MUST be in Arabic language (RTL).
+* Responsiveness: All pages and components MUST be 100% mobile responsive using Bootstrap 5 grid and utilities.
+* Typography & Colors: DO NOT use dull or faded gray colors (like standard muted text). Use a bright, premium gray (e.g., #cbd5e1) for secondary text and white for primary text to maintain high contrast against the dark background.
+
+---
+
 ## Future Improvements
 
 * Add pagination for products
 * Add search functionality
 * Add caching layer
 * Convert to SPA or React in future if needed
-
----

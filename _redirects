@@ -1,0 +1,6 @@
+# Netlify Redirects for Marmoush Store
+# Ensure /dashboard redirects to the dashboard folder properly
+/dashboard/*  /dashboard/:splat  200
+
+# Handle 404s (optional: you can create a 404.html)
+/*  /index.html  200

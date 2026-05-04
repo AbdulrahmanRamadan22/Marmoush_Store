@@ -1,0 +1,312 @@
+<!-- /dashboard/index.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية - مرموش ستور</title>
+    <!-- Bootstrap 5 RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <img src="../assets/logo.jpeg" class="loader-logo" alt="Marmoush Store Logo">
+        <div class="loader-text">مرموش ستور</div>
+    </div>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="sidebar p-3 d-none d-lg-block" style="width: 260px;">
+            <div class="text-center mb-4 mt-2">
+                <img src="../assets/logo.jpeg" alt="Marmoush Store Logo" style="width: 100px; height: 100px; border-radius: 50%; box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); margin-bottom: 10px;">
+                <h5 class="text-white mb-0 fw-bold">مرموش ستور</h5>
+            </div>
+            <ul class="nav flex-column mt-5">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a>
+                </li>
+            </ul>
+            
+            <div class="mt-auto pt-5">
+                <a href="#" class="nav-link text-muted mt-5 logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-3 p-md-4" style="max-height: 100vh; overflow-y: auto;">
+            
+            <!-- Mobile Header -->
+            <div class="d-flex justify-content-between align-items-center d-lg-none mb-3">
+                <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
+                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile">
+                    <i class='bx bx-menu'></i>
+                </button>
+            </div>
+
+            <!-- Top Header -->
+            <div class="app-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <div>
+                    <h3 class="mb-1 fw-bold">لوحة التحكم</h3>
+                    <p class="text-muted mb-0 font-sm">مرحباً بك في لوحة إدارة مرموش ستور</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="text-end d-none d-sm-block">
+                            <h6 class="mb-0 font-sm">Marmoush Store</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;">مرموش ستور</small>
+                        </div>
+                        <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            M
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards Row -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-content text-end">
+                            <h6>إجمالي المنتجات</h6>
+                            <h3 id="stat-products">0</h3>
+                            <small>منتج</small>
+                        </div>
+                        <i class='bx bx-t-shirt stat-icon'></i>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-content text-end">
+                            <h6>إجمالي التصنيفات</h6>
+                            <h3 id="stat-categories">0</h3>
+                            <small>تصنيف</small>
+                        </div>
+                        <i class='bx bx-category stat-icon'></i>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-content text-end">
+                            <h6>إجمالي الخصومات</h6>
+                            <h3 id="stat-discounts">0</h3>
+                            <small>خصم نشط</small>
+                        </div>
+                        <i class='bx bxs-discount stat-icon'></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Table Section -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">قائمة المنتجات</h4>
+                <button type="button" class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                    <i class='bx bx-plus'></i> إضافة منتج جديد
+                </button>
+            </div>
+
+            <div class="table-container table-responsive">
+                <table class="table text-center align-middle">
+                    <thead>
+                        <tr>
+                            <th>الصورة</th>
+                            <th>اسم المنتج</th>
+                            <th>التصنيف</th>
+                            <th>السعر الأصلي</th>
+                            <th>سعر الخصم</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body">
+                        <tr><td colspan="6" class="py-4 text-muted">جاري تحميل المنتجات...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Mobile Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start bg-dark" tabindex="-1" id="sidebarMobile">
+      <!-- (Same as products.html offcanvas content) -->
+      <div class="offcanvas-header border-bottom border-secondary">
+        <h5 class="offcanvas-title text-white">مرموش ستور</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body sidebar">
+         <ul class="nav flex-column">
+             <li class="nav-item"><a class="nav-link active" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
+             <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
+             <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
+             <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
+             <li class="nav-item"><a class="nav-link mt-auto text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+         </ul>
+      </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">إضافة منتج جديد</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="add-product-form">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">اسم المنتج</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="product-name" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">التصنيف</label>
+                        <div class="custom-dropdown category-dropdown" id="category-dropdown-container">
+                            <div class="dropdown-selected bg-dark text-white border-secondary rounded p-2 d-flex align-items-center justify-content-between" style="cursor: pointer; border: 1px solid #444;">
+                                <span class="selected-text">اختر التصنيف</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </div>
+                            <div class="dropdown-options bg-dark border-secondary rounded shadow-lg d-none" style="position: absolute; z-index: 1000; width: 100%; max-height: 200px; overflow-y: auto; border: 1px solid #444; margin-top: 5px;">
+                                <!-- Options will be injected here -->
+                            </div>
+                            <input type="hidden" id="product-category" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">السعر الأصلي (جنيه)</label>
+                        <input type="number" class="form-control bg-dark text-white border-secondary" id="product-price" step="0.01" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">نسبة الخصم (%)</label>
+                        <input type="number" class="form-control bg-dark text-white border-secondary" id="product-discount" min="0" max="100" value="0">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label text-muted">رابط الصورة</label>
+                        <input type="url" class="form-control bg-dark text-white border-secondary" id="product-image-url" placeholder="أدخل رابط الصورة (مثلاً من ImgBB)" required>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label text-muted">الوصف</label>
+                        <textarea class="form-control bg-dark text-white border-secondary" id="product-description" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
+                            <label class="form-check-label text-muted" for="product-availability">متوفر في المتجر</label>
+                            <input class="form-check-input ms-0" type="checkbox" id="product-availability" checked>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-2">إضافة المنتج الآن</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Product Modal (Home Page) -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">تعديل المنتج</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="edit-product-form">
+                <input type="hidden" id="edit-product-id">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">اسم المنتج</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-product-name" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">التصنيف</label>
+                        <div class="custom-dropdown category-dropdown" id="edit-category-dropdown-container">
+                            <div class="dropdown-selected bg-dark text-white border-secondary rounded p-2 d-flex align-items-center justify-content-between" style="cursor: pointer; border: 1px solid #444;">
+                                <span class="selected-text">اختر التصنيف</span>
+                                <i class='bx bx-chevron-down'></i>
+                            </div>
+                            <div class="dropdown-options bg-dark border-secondary rounded shadow-lg d-none" style="position: absolute; z-index: 1000; width: 100%; max-height: 200px; overflow-y: auto; border: 1px solid #444; margin-top: 5px;">
+                                <!-- Options will be injected here -->
+                            </div>
+                            <input type="hidden" id="edit-product-category" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">السعر الأصلي (جنيه)</label>
+                        <input type="number" class="form-control bg-dark text-white border-secondary" id="edit-product-price" step="0.01" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">نسبة الخصم (%)</label>
+                        <input type="number" class="form-control bg-dark text-white border-secondary" id="edit-product-discount" min="0" max="100">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label text-muted d-block">الصورة الحالية</label>
+                        <div id="edit-img-preview" class="mb-2"></div>
+                        <label class="form-label text-muted">تحديث رابط الصورة</label>
+                        <input type="url" class="form-control bg-dark text-white border-secondary" id="edit-product-image-url" placeholder="رابط الصورة">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label text-muted">الوصف</label>
+                        <textarea class="form-control bg-dark text-white border-secondary" id="edit-product-description" rows="2"></textarea>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
+                            <label class="form-check-label text-muted" for="edit-product-availability">متوفر في المتجر</label>
+                            <input class="form-check-input ms-0" type="checkbox" id="edit-product-availability">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success w-100 py-2">تحديث بيانات المنتج</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content bg-dark text-white border-danger border-opacity-25" style="border-width: 2px;">
+          <div class="modal-body p-4 text-center">
+            <div class="mb-3 text-danger" style="font-size: 3.5rem;">
+              <i class='bx bx-info-circle'></i>
+            </div>
+            <h5 class="mb-2 fw-bold">هل أنت متأكد؟</h5>
+            <p class="text-muted mb-4 small">هذا الإجراء سيقوم بحذف البيانات نهائياً ولا يمكن التراجع عنه.</p>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-danger py-2 fw-bold" id="confirm-delete-btn">حذف الآن</button>
+              <button type="button" class="btn btn-outline-secondary py-2" data-bs-dismiss="modal">إلغاء</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container-custom" id="toast-notification">
+        <div class="custom-toast" id="toast-body">
+            <i class='bx bx-check-circle icon'></i>
+            <span id="toast-msg">تم الإجراء بنجاح</span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../js/pages/dashboard.js"></script>
+</body>
+</html>
