@@ -4,41 +4,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Banners Management</title>
+    <title>لوحة التحكم - إدارة البانرات | مرموش ستور</title>
+    <!-- Bootstrap 5 CSS (RTL) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
+<body class="text-white">
+
     <div class="d-flex">
-        <!-- Sidebar Component -->
-        <div class="bg-dark text-white p-3 vh-100" style="width: 250px;">
-            <h4>Admin Dashboard</h4>
-            <ul class="nav flex-column mt-4">
-                <li class="nav-item"><a class="nav-link text-white" href="index.html">Dashboard Home</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="products.html">Products</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="categories.html">Categories</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="banners.html">Banners</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="settings.html">Settings</a></li>
+        <!-- Sidebar (Desktop) -->
+        <div class="sidebar d-none d-lg-flex flex-column p-3 vh-100 sticky-top">
+            <div class="brand mb-4 px-2">
+                <h4 class="mb-0 fw-bold">مرموش ستور</h4>
+                <small class="text-muted">لوحة التحكم</small>
+            </div>
+            <ul class="nav flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class='bx bx-grid-alt'></i> لوحة التحكم
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="products.html" class="nav-link">
+                        <i class='bx bx-t-shirt'></i> المنتجات
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="categories.html" class="nav-link">
+                        <i class='bx bx-category'></i> التصنيفات
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="banners.html" class="nav-link active">
+                        <i class='bx bx-image'></i> إدارة البانرات
+                    </a>
+                </li>
             </ul>
+            <hr class="border-secondary">
+            <a href="#" class="nav-link logout-btn text-muted">
+                <i class='bx bx-log-out'></i> تسجيل الخروج
+            </a>
         </div>
-        
-        <div class="flex-grow-1 p-4">
-            <h2>Banners Management</h2>
-            <div id="content-area">
-                <!-- Table Placeholder -->
-                <table class="table table-bordered mt-3">
+
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-3 p-md-4" style="max-height: 100vh; overflow-y: auto;">
+            
+            <!-- Mobile Header -->
+            <div class="d-flex justify-content-between align-items-center d-lg-none mb-3">
+                <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
+                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile">
+                    <i class='bx bx-menu'></i>
+                </button>
+            </div>
+
+            <!-- Top Header -->
+            <div class="app-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <div>
+                    <h3 class="mb-1 fw-bold">إدارة البانرات الإعلانية</h3>
+                    <p class="text-muted mb-0 font-sm">تحكم في واجهة المتجر والعروض الترويجية</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">M</div>
+                </div>
+            </div>
+
+            <!-- Actions Bar -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <button type="button" class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addBannerModal">
+                    <i class='bx bx-plus'></i> إضافة بانر جديد
+                </button>
+            </div>
+
+            <!-- Banners Table -->
+            <div class="table-container table-responsive">
+                <table class="table text-center align-middle">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Actions</th>
+                            <th>المعاينة</th>
+                            <th class="text-end">العنوان/الوصف</th>
+                            <th>الصفحة</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body">
-                        <tr><td colspan="3" class="text-center">Loading data...</td></tr>
+                    <tbody id="banners-table-body">
+                        <tr><td colspan="5" class="py-4 text-muted">جاري تحميل البانرات...</td></tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <!-- Mobile Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start bg-dark" tabindex="-1" id="sidebarMobile">
+      <div class="offcanvas-header border-bottom border-secondary">
+        <h5 class="offcanvas-title text-white">مرموش ستور</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body sidebar">
+         <ul class="nav flex-column">
+             <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
+             <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
+             <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
+             <li class="nav-item"><a class="nav-link active" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
+             <li class="nav-item"><a class="nav-link mt-auto text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+         </ul>
+      </div>
+    </div>
+
+    <!-- Add Banner Modal -->
+    <div class="modal fade" id="addBannerModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">إضافة بانر جديد</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="add-banner-form" novalidate>
+                <div class="mb-3">
+                    <label class="form-label text-muted">رابط الصورة</label>
+                    <input type="url" class="form-control bg-dark text-white border-secondary" id="banner-image" placeholder="https://..." required>
+                    <div class="form-text text-info small mt-2">
+                        <i class='bx bx-info-circle'></i> المقاس المثالي: 1200 × 400 بكسل.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted">عنوان البانر (اختياري)</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" id="banner-title" placeholder="أدخل عنواناً جذاباً">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted">وصف قصير (اختياري)</label>
+                    <textarea class="form-control bg-dark text-white border-secondary" id="banner-desc" rows="2" placeholder="اكتب وصفاً موجزاً"></textarea>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label text-muted small">ظهور في صفحة</label>
+                        <select class="form-select bg-dark text-white border-secondary" id="banner-page">
+                            <option value="home">الرئيسية</option>
+                            <option value="products">كل المنتجات</option>
+                            <option value="product_details">تفاصيل المنتج</option>
+                            <option value="offers">العروض</option>
+                            <option value="contact">تواصل معنا</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small">مكان البانر</label>
+                        <select class="form-select bg-dark text-white border-secondary" id="banner-position">
+                            <option value="top">أعلى الصفحة (Header)</option>
+                            <option value="middle">منتصف الصفحة (Body)</option>
+                            <option value="bottom">أسفل الصفحة (Footer)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small">رابط التوجيه (Link)</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" id="banner-link" placeholder="/product/slug او رابط خارجي">
+                </div>
+                <div class="mb-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="banner-active" checked>
+                        <label class="form-check-label" for="banner-active">تفعيل البانر فوراً</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">إضافة البانر</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Banner Modal -->
+    <div class="modal fade" id="editBannerModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title">تعديل البانر</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="edit-banner-form" novalidate>
+                <input type="hidden" id="edit-banner-id">
+                <div class="mb-3 text-center">
+                    <img id="edit-banner-preview" src="" class="rounded mb-3 border border-secondary" style="max-width: 100%; height: 100px; object-fit: cover;">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted">رابط الصورة</label>
+                    <input type="url" class="form-control bg-dark text-white border-secondary" id="edit-banner-image" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted">عنوان البانر</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-banner-title">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted">وصف قصير</label>
+                    <textarea class="form-control bg-dark text-white border-secondary" id="edit-banner-desc" rows="2"></textarea>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label text-muted small">ظهور في صفحة</label>
+                        <select class="form-select bg-dark text-white border-secondary" id="edit-banner-page">
+                            <option value="home">الرئيسية</option>
+                            <option value="products">كل المنتجات</option>
+                            <option value="product_details">تفاصيل المنتج</option>
+                            <option value="offers">العروض</option>
+                            <option value="contact">تواصل معنا</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label text-muted small">مكان البانر</label>
+                        <select class="form-select bg-dark text-white border-secondary" id="edit-banner-position">
+                            <option value="top">أعلى الصفحة</option>
+                            <option value="middle">منتصف الصفحة</option>
+                            <option value="bottom">أسفل الصفحة</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small">رابط التوجيه</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-banner-link">
+                </div>
+                <div class="mb-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="edit-banner-active">
+                        <label class="form-check-label" for="edit-banner-active">بانر نشط</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">حفظ التعديلات</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content bg-dark text-white border-danger border-opacity-25" style="border-width: 2px;">
+          <div class="modal-body p-4 text-center">
+            <div class="mb-3 text-danger" style="font-size: 3.5rem;">
+              <i class='bx bx-info-circle'></i>
+            </div>
+            <h5 class="mb-2 fw-bold">هل أنت متأكد؟</h5>
+            <p class="text-muted mb-4 small">هذا الإجراء سيقوم بحذف البانر نهائياً ولا يمكن التراجع عنه.</p>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-danger py-2 fw-bold" id="confirm-delete-btn">حذف الآن</button>
+              <button type="button" class="btn btn-outline-secondary py-2" data-bs-dismiss="modal">إلغاء</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container-custom" id="toast-notification">
+        <div class="custom-toast" id="toast-body">
+            <div class="icon"><i class='bx bx-check-circle'></i></div>
+            <span>تم الإجراء بنجاح</span>
         </div>
     </div>
 

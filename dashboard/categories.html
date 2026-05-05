@@ -45,6 +45,15 @@
 
         <!-- Main Content -->
         <div class="flex-grow-1 p-3 p-md-4" style="max-height: 100vh; overflow-y: auto;">
+            
+            <!-- Mobile Header -->
+            <div class="d-flex justify-content-between align-items-center d-lg-none mb-3">
+                <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
+                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile">
+                    <i class='bx bx-menu'></i>
+                </button>
+            </div>
+
             <!-- Top Header -->
             <div class="app-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
                 <div>
@@ -75,7 +84,7 @@
                         <tr>
                             <th>الأيقونة</th>
                             <th>الاسم</th>
-                            <th>Slug</th>
+                            <th class="d-none d-md-table-cell">Slug</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -96,7 +105,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-4">
-            <form id="add-category-form">
+            <form id="add-category-form" novalidate>
                 <div class="mb-3">
                     <label class="form-label text-muted">اسم التصنيف</label>
                     <input type="text" class="form-control bg-dark text-white border-secondary" id="cat-name" required placeholder="مثال: أحذية">
@@ -125,7 +134,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-4">
-            <form id="edit-category-form">
+            <form id="edit-category-form" novalidate>
                 <input type="hidden" id="edit-cat-id">
                 <div class="mb-3">
                     <label class="form-label text-muted">اسم التصنيف</label>
@@ -171,6 +180,50 @@
     <div class="toast-container-custom" id="toast-notification">
         <div class="custom-toast" id="toast-body">
             <i class='bx bx-check-circle icon'></i>
+            <span>تم الإجراء بنجاح</span>
+        </div>
+    </div>
+
+    <!-- Mobile Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start bg-dark" tabindex="-1" id="sidebarMobile">
+      <div class="offcanvas-header border-bottom border-secondary">
+        <h5 class="offcanvas-title text-white">مرموش ستور</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body sidebar">
+         <ul class="nav flex-column">
+             <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
+             <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
+             <li class="nav-item"><a class="nav-link active" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
+             <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
+             <li class="nav-item"><a class="nav-link mt-auto text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+         </ul>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content bg-dark text-white border-danger border-opacity-25" style="border-width: 2px;">
+          <div class="modal-body p-4 text-center">
+            <div class="mb-3 text-danger" style="font-size: 3.5rem;">
+              <i class='bx bx-info-circle'></i>
+            </div>
+            <h5 class="mb-2 fw-bold">هل أنت متأكد؟</h5>
+            <p class="text-muted mb-4 small">هذا الإجراء سيقوم بحذف البيانات نهائياً ولا يمكن التراجع عنه.</p>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-danger py-2 fw-bold" id="confirm-delete-btn">حذف الآن</button>
+              <button type="button" class="btn btn-outline-secondary py-2" data-bs-dismiss="modal">إلغاء</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container-custom" id="toast-notification">
+        <div class="custom-toast" id="toast-body">
+            <div class="icon"><i class='bx bx-check-circle'></i></div>
             <span>تم الإجراء بنجاح</span>
         </div>
     </div>

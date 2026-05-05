@@ -78,22 +78,68 @@
 
             <!-- Actions Bar -->
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-                <button type="button" class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                <button type="button" class="btn btn-primary d-flex align-items-center gap-2 w-sm-100 justify-content-center" data-bs-toggle="modal" data-bs-target="#addProductModal">
                     <i class='bx bx-plus'></i> إضافة منتج جديد
                 </button>
 
-                <div class="d-flex gap-2 align-items-center">
+                <div class="filter-actions-group flex-grow-1">
                     <div class="search-box-container">
-                        <input type="text" class="form-control search-box" placeholder="ابحث عن منتج...">
+                        <input type="text" class="form-control search-box" id="product-search" placeholder="ابحث عن اسم المنتج...">
                         <i class='bx bx-search search-icon'></i>
                     </div>
-                    <select class="form-select bg-dark text-white border-secondary" style="width: 140px;">
-                        <option>كل التصنيفات</option>
-                        <option>تيشرتات</option>
-                        <option>أحذية</option>
-                    </select>
-                    <button class="btn btn-outline-secondary"><i class='bx bx-filter'></i></button>
+                    <div class="d-flex gap-2 flex-grow-1">
+                        <select class="form-select bg-dark text-white border-secondary" id="category-filter">
+                            <option value="all">كل الأقسام</option>
+                        </select>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filterModal" title="فلترة متقدمة">
+                            <i class='bx bx-filter-alt'></i>
+                        </button>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Advanced Filter Modal -->
+            <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content bg-dark text-white border-secondary">
+                  <div class="modal-header border-secondary">
+                    <h5 class="modal-title">فلترة متقدمة</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body p-4">
+                    <div class="mb-4">
+                        <label class="form-label text-muted small">ترتيب حسب السعر</label>
+                        <select class="form-select bg-dark text-white border-secondary" id="sort-price">
+                            <option value="none">بدون ترتيب</option>
+                            <option value="low">من الأقل للأعلى</option>
+                            <option value="high">من الأعلى للأقل</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label text-muted small">حالة العروض</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="filter-offers">
+                            <label class="form-check-label" for="filter-offers">عرض الخصومات فقط</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-muted small">التوفر</label>
+                        <select class="form-select bg-dark text-white border-secondary" id="filter-availability">
+                            <option value="all">الكل</option>
+                            <option value="available">متوفر فقط</option>
+                            <option value="out">غير متوفر فقط</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" id="apply-advanced-filters" data-bs-dismiss="modal">تطبيق الفلاتر</button>
+                        <button class="btn btn-outline-secondary" id="clear-all-filters" data-bs-dismiss="modal">إعادة ضبط الكل</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <!-- Table Container -->
@@ -102,11 +148,11 @@
                     <thead>
                         <tr>
                             <th>الصورة</th>
-                            <th>العنوان</th>
-                            <th>التصنيف</th>
+                            <th>الاسم</th>
+                            <th class="d-none d-md-table-cell">التصنيف</th>
                             <th>السعر</th>
-                            <th>الخصم</th>
-                            <th>الحالة</th>
+                            <th class="d-none d-md-table-cell">الخصم</th>
+                            <th class="d-none d-md-table-cell">الحالة</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -147,7 +193,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-4">
-            <form id="add-product-form">
+            <form id="add-product-form" novalidate>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-muted">اسم المنتج</label>
@@ -205,7 +251,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body p-4">
-            <form id="edit-product-form">
+            <form id="edit-product-form" novalidate>
                 <input type="hidden" id="edit-product-id">
                 <div class="row">
                     <div class="col-md-6 mb-3">

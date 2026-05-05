@@ -22,10 +22,10 @@ export function renderCategoriesTable(data, tableBody) {
         const row = `
             <tr>
                 <td>
-                    <img src="${imageUrl}" alt="${category.name}" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover; border: 1px solid var(--border-color);">
+                    <img src="${imageUrl}" alt="${category.name}" class="rounded shadow-sm" style="width: 40px; height: 40px; object-fit: cover; border: 1px solid var(--border-color);">
                 </td>
-                <td class="fw-bold text-white">${category.name}</td>
-                <td class="text-muted">${category.slug || '-'}</td>
+                <td class="fw-bold text-white text-end" style="font-size: 0.9rem;">${category.name}</td>
+                <td class="text-muted d-none d-md-table-cell">${category.slug || '-'}</td>
                 <td>
                     <div class="action-buttons justify-content-center">
                         <button class="btn-action text-primary btn-edit-category" 

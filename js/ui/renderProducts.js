@@ -21,8 +21,13 @@ export function renderProductsTable(data, tableBody) {
         
         // Pricing logic
         const originalPrice = parseFloat(product.originalPrice || 0);
-        const discountPrice = product.discountPrice ? `${product.discountPrice} ج.م` : '-';
-        const discountBadge = product.discountPercentage ? `<span class="badge bg-danger">-${product.discountPercentage}%</span>` : '-';
+        const discountPercentage = parseFloat(product.discountPercentage || 0);
+        const hasDiscount = discountPercentage > 0;
+        const finalPrice = hasDiscount 
+            ? (originalPrice - (originalPrice * (discountPercentage / 100))).toFixed(2) 
+            : originalPrice;
+
+        const discountBadge = hasDiscount ? `<span class="badge bg-danger">-${discountPercentage}%</span>` : '-';
         
         // Status logic
         const isAvailable = product.isAvailable !== false; // Default to true
@@ -33,13 +38,19 @@ export function renderProductsTable(data, tableBody) {
         const row = `
             <tr>
                 <td>
-                    <img src="${imageUrl}" alt="${product.name}" class="rounded shadow-sm" style="width: 60px; height: 60px; object-fit: cover; border: 1px solid var(--border-color);">
+                    <img src="${imageUrl}" alt="${product.name}" class="rounded shadow-sm" style="width: 50px; height: 50px; object-fit: cover; border: 1px solid var(--border-color);">
                 </td>
-                <td class="fw-bold text-white text-end">${product.name}</td>
-                <td><span class="badge bg-dark border border-secondary text-muted">${product.category || 'عام'}</span></td>
-                <td class="fw-bold">${originalPrice} ج.م</td>
-                <td>${discountBadge}</td>
-                <td>${statusBadge}</td>
+                <td class="fw-bold text-white text-end">
+                    <div style="font-size: 0.9rem;">${product.name}</div>
+                    <div class="d-md-none text-muted small">${product.category || 'عام'}</div>
+                </td>
+                <td class="d-none d-md-table-cell"><span class="badge bg-dark border border-secondary text-muted">${product.category || 'عام'}</span></td>
+                <td>
+                    <div class="fw-bold text-primary" style="font-size: 0.95rem;">${finalPrice} <small>ج.م</small></div>
+                    ${hasDiscount ? `<div class="text-muted text-decoration-line-through small" style="font-size: 0.75rem;">${originalPrice} ج.م</div>` : ''}
+                </td>
+                <td class="d-none d-md-table-cell">${discountBadge}</td>
+                <td class="d-none d-md-table-cell">${statusBadge}</td>
                 <td>
                     <div class="action-buttons justify-content-center">
                         <button class="btn-action text-primary btn-edit-product" 
@@ -66,18 +77,36 @@ export function renderProductsTable(data, tableBody) {
 }
 
 /**
- * Show a success toast notification
+ * Show a premium chic toast notification
  * @param {string} message 
+ * @param {string} type - 'success', 'error', 'warning'
  */
-export function showToast(message) {
+export function showToast(message, type = 'success') {
     const toast = document.getElementById('toast-notification');
     const toastBody = document.getElementById('toast-body');
+    const icon = toastBody ? toastBody.querySelector('.icon i') : null;
+    
     if(toast && toastBody) {
+        // Reset classes
+        toastBody.className = 'custom-toast';
+        toastBody.classList.add(type);
+        
+        // Set message
         toastBody.querySelector('span').innerText = message;
+        
+        // Set icon
+        if (icon) {
+            icon.className = 'bx ' + {
+                'success': 'bx-check-circle',
+                'error': 'bx-error-circle',
+                'warning': 'bx-info-circle'
+            }[type];
+        }
+
         toastBody.classList.add('show');
         setTimeout(() => {
             toastBody.classList.remove('show');
-        }, 3000);
+        }, 4000);
     }
 }
 

@@ -1,19 +1,65 @@
 // /js/api/banners.js
-// API module for banners
+import { db } from '../firebase.js';
+import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+const collectionName = "banners";
 
 /**
- * Fetch banners from Firebase
+ * Fetch all Banners from Firestore
  */
 export async function getBanners() {
-    // TODO: connect to Firebase
-    console.log("Fetching banners from Firebase placeholder...");
-    return [];
+    try {
+        const querySnapshot = await getDocs(collection(db, collectionName));
+        const bannersList = [];
+        querySnapshot.forEach((doc) => {
+            bannersList.push({ id: doc.id, ...doc.data() });
+        });
+        return bannersList;
+    } catch (error) {
+        console.error("Error fetching banners: ", error);
+        return [];
+    }
 }
 
 /**
- * Add banners to Firebase
+ * Add a new Banner
  */
-export async function addBanner(data) {
-    // TODO: connect to Firebase
-    console.log("Adding Banner to Firebase placeholder...", data);
+export async function addBanner(bannerData) {
+    try {
+        const docRef = await addDoc(collection(db, collectionName), {
+            ...bannerData,
+            createdAt: new Date().toISOString()
+        });
+        return docRef.id;
+    } catch (error) {
+        console.error("Error adding banner: ", error);
+        throw error;
+    }
+}
+
+/**
+ * Update an existing Banner
+ */
+export async function updateBanner(bannerId, bannerData) {
+    try {
+        const docRef = doc(db, collectionName, bannerId);
+        await updateDoc(docRef, bannerData);
+        return true;
+    } catch (error) {
+        console.error("Error updating banner: ", error);
+        throw error;
+    }
+}
+
+/**
+ * Delete a Banner
+ */
+export async function deleteBanner(bannerId) {
+    try {
+        await deleteDoc(doc(db, collectionName, bannerId));
+        return true;
+    } catch (error) {
+        console.error("Error deleting banner: ", error);
+        throw error;
+    }
 }
