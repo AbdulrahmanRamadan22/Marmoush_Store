@@ -15,39 +15,34 @@
 <body class="text-white">
 
     <div class="d-flex">
-        <!-- Sidebar (Desktop) -->
-        <div class="sidebar d-none d-lg-flex flex-column p-3 vh-100 sticky-top">
-            <div class="brand mb-4 px-2">
-                <h4 class="mb-0 fw-bold">مرموش ستور</h4>
-                <small class="text-muted">لوحة التحكم</small>
+        <!-- Sidebar Component (Desktop) -->
+        <nav class="sidebar p-3 d-none d-lg-block" style="width: 260px;">
+            <div class="text-center mb-4 mt-2">
+                <img src="../assets/logo.jpeg" alt="Marmoush Store Logo" style="width: 80px; height: 80px; border-radius: 50%; box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); margin-bottom: 10px;">
+                <h5 class="text-white mb-0 fw-bold">مرموش ستور</h5>
             </div>
-            <ul class="nav flex-column mb-auto">
+            <ul class="nav flex-column mt-5">
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link">
-                        <i class='bx bx-grid-alt'></i> لوحة التحكم
-                    </a>
+                    <a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a>
                 </li>
                 <li class="nav-item">
-                    <a href="products.html" class="nav-link">
-                        <i class='bx bx-t-shirt'></i> المنتجات
-                    </a>
+                    <a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a>
                 </li>
                 <li class="nav-item">
-                    <a href="categories.html" class="nav-link">
-                        <i class='bx bx-category'></i> التصنيفات
-                    </a>
+                    <a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a>
                 </li>
                 <li class="nav-item">
-                    <a href="banners.html" class="nav-link active">
-                        <i class='bx bx-image'></i> إدارة البانرات
-                    </a>
+                    <a class="nav-link active" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a>
                 </li>
             </ul>
-            <hr class="border-secondary">
-            <a href="#" class="nav-link logout-btn text-muted">
-                <i class='bx bx-log-out'></i> تسجيل الخروج
-            </a>
-        </div>
+            
+            <div class="mt-auto pt-5">
+                <a href="#" class="nav-link text-muted mt-5 logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
+            </div>
+        </nav>
 
         <!-- Main Content -->
         <div class="flex-grow-1 p-3 p-md-4" style="max-height: 100vh; overflow-y: auto;">
@@ -105,12 +100,13 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
       </div>
       <div class="offcanvas-body sidebar">
-         <ul class="nav flex-column">
+         <ul class="nav flex-column mt-3">
              <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
              <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
              <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
              <li class="nav-item"><a class="nav-link active" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
-             <li class="nav-item"><a class="nav-link mt-auto text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+             <li class="nav-item"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
+             <li class="nav-item"><a class="nav-link mt-5 text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
          </ul>
       </div>
     </div>
