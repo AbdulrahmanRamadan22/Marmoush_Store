@@ -39,18 +39,170 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Navbar Component -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Preloader -->
+    <div id="preloader">
+        <img src="assets/logo.jpeg" class="loader-logo" alt="Marmoush Store Logo">
+        <div class="loader-text">مرموش ستور</div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top main-navbar">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Marmoush Store</a>
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="assets/logo.jpeg" alt="Logo" class="rounded-circle logo-img">
+                <span class="fw-bold">مرموش ستور</span>
+            </a>
+            
+            <div class="d-flex gap-3 order-lg-last">
+                <a href="#" class="nav-icon-link" title="بحث">
+                    <i class='bx bx-search'></i>
+                </a>
+                <a href="#" class="nav-icon-link position-relative" title="السلة">
+                    <i class='bx bx-shopping-bag'></i>
+                    <span class="badge-cart">0</span>
+                </a>
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <i class='bx bx-menu-alt-right fs-1'></i>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">المنتجات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="category.html">الأقسام</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="offers.html">العروض</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">تواصل معنا</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h1>Home</h1>
-        <p>Placeholder content for Home</p>
-        <div id="content-area"></div>
-    </div>
+    <!-- Hero Section (Dynamic Banners) -->
+    <section class="hero-banners">
+        <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner" id="banners-container">
+                <!-- Banners will be injected here -->
+                <div class="carousel-item active">
+                    <div class="banner-skeleton"></div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <i class='bx bx-chevron-right fs-1'></i>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <i class='bx bx-chevron-left fs-1'></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-5 categories-section">
+        <div class="container">
+            <div class="section-header d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold h4 mb-0 border-right-primary pe-3">تسوق حسب القسم</h2>
+                <a href="category.html" class="text-primary text-decoration-none font-sm">عرض الكل <i class='bx bx-left-arrow-alt'></i></a>
+            </div>
+            <div class="row g-3 g-md-4" id="categories-container">
+                <!-- Categories will be injected here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section class="py-5 products-section">
+        <div class="container">
+            <div class="section-header d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold h4 mb-0 border-right-primary pe-3">أحدث المنتجات</h2>
+                <a href="products.html" class="text-primary text-decoration-none font-sm">مشاهدة المزيد <i class='bx bx-left-arrow-alt'></i></a>
+            </div>
+            <div class="row g-3 g-md-4" id="featured-products-container">
+                <!-- Products will be injected here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Banner -->
+    <section class="py-5 features-bar">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-6 col-md-3">
+                    <div class="feature-card">
+                        <i class='bx bx-truck'></i>
+                        <h6>شحن سريع</h6>
+                        <p>لكل أنحاء الجمهورية</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-card">
+                        <i class='bx bx-check-shield'></i>
+                        <h6>جودة مضمونة</h6>
+                        <p>منتجات أصلية 100%</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-card">
+                        <i class='bx bx-support'></i>
+                        <h6>دعم فني</h6>
+                        <p>متواجدون طوال اليوم</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="feature-card">
+                        <i class='bx bx-refresh'></i>
+                        <h6>استبدال سهل</h6>
+                        <p>خلال 14 يوم</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer pt-5 pb-3">
+        <div class="container text-center text-md-end">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="footer-brand mb-3">
+                        <img src="assets/logo.jpeg" alt="Logo" class="rounded-circle mb-2" style="width: 60px;">
+                        <h4 class="fw-bold text-white">مرموش ستور</h4>
+                    </div>
+                    <p class="text-muted font-sm">وجهتك الأولى لأفضل المنتجات والملابس الرياضية بأعلى جودة وأفضل سعر في مصر.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-white mb-3">روابط سريعة</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html">كل المنتجات</a></li>
+                        <li><a href="offers.html">العروض والخصومات</a></li>
+                        <li><a href="contact.html">تواصل معنا</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-white mb-3">تواصل معنا</h5>
+                    <div class="social-links d-flex gap-3 justify-content-center justify-content-md-start mb-3">
+                        <a href="#" class="social-icon" id="footer-fb"><i class='bx bxl-facebook'></i></a>
+                        <a href="#" class="social-icon" id="footer-ig"><i class='bx bxl-instagram'></i></a>
+                        <a href="#" class="social-icon" id="footer-wa"><i class='bx bxl-whatsapp'></i></a>
+                    </div>
+                    <p class="text-muted font-sm mb-1" id="footer-phone"><i class='bx bx-phone'></i> جاري التحميل...</p>
+                    <p class="text-muted font-sm" id="footer-email"><i class='bx bx-envelope'></i> جاري التحميل...</p>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <p class="text-center text-muted font-sm mb-0">جميع الحقوق محفوظة &copy; 2024 مرموش ستور</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

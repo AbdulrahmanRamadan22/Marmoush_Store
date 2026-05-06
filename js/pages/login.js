@@ -14,6 +14,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorAlert = document.getElementById('login-error');
     const forgotPasswordLink = document.querySelector('a[href="#"].text-primary');
 
+    // --- ميزة استرجاع البريد المحفوظ ---
+    const savedEmail = localStorage.getItem('marmoush_admin_email');
+    const emailInput = document.getElementById('login-email');
+    const rememberCheckbox = document.getElementById('rememberMe');
+
+    if (savedEmail && emailInput) {
+        emailInput.value = savedEmail;
+        if (rememberCheckbox) rememberCheckbox.checked = true;
+    }
+
+    // 0. ميزة إظهار وإخفاء كلمة المرور
+    const toggleLoginPass = document.getElementById('toggle-login-password');
+    if (toggleLoginPass) {
+        toggleLoginPass.addEventListener('click', () => {
+            const passInput = document.getElementById('login-password');
+            const icon = toggleLoginPass.querySelector('i');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                icon.className = 'bx bx-hide fs-5';
+            } else {
+                passInput.type = 'password';
+                icon.className = 'bx bx-show fs-5';
+            }
+        });
+    }
+
     // 1. معالجة تسجيل الدخول
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -25,11 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
             errorAlert.classList.add('d-none');
 
-            const email = document.getElementById('login-email').value;
+            const email = emailInput.value;
             const password = document.getElementById('login-password').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
+            const rememberMe = rememberCheckbox ? rememberCheckbox.checked : false;
 
             try {
+                // حفظ أو مسح الإيميل من الذاكرة بناءً على اختيار "تذكرني"
+                if (rememberMe) {
+                    localStorage.setItem('marmoush_admin_email', email);
+                } else {
+                    localStorage.removeItem('marmoush_admin_email');
+                }
+
                 await loginAdmin(email, password, rememberMe);
                 // توجيه صريح بعد النجاح
                 window.location.href = 'index.html';

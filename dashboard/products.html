@@ -11,6 +11,8 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Theme Manager -->
+    <script src="../js/theme.js"></script>
 </head>
 <body>
     <div class="d-flex">
@@ -33,6 +35,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a>
+                </li>
                 <li class="nav-item mt-4">
                     <a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a>
                 </li>
@@ -47,21 +52,46 @@
         <div class="flex-grow-1 p-3 p-md-4" style="max-height: 100vh; overflow-y: auto;">
             
             <!-- Mobile Header / Toggle -->
-            <div class="d-flex justify-content-between align-items-center d-lg-none mb-3">
-                <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
-                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile">
-                    <i class='bx bx-menu'></i>
-                </button>
+            <div class="d-lg-none mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="theme-toggle m-0" title="تبديل الوضع">
+                            <i class='bx bx-sun'></i>
+                        </div>
+                        <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center text-white"
+                            style="width: 35px; height: 35px; font-size: 0.9rem;">M</div>
+                        <button class="btn btn-outline-secondary p-1 px-2" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#sidebarMobile">
+                            <i class='bx bx-menu fs-4'></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="search-box-container w-100 m-0">
+                    <input type="text" class="form-control search-box global-search-input" placeholder="ابحث عن منتج، تصنيف، أو بانر...">
+                    <i class='bx bx-search search-icon'></i>
+                </div>
             </div>
 
             <!-- Top Header -->
             <div class="app-header d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div>
-                    <h3 class="mb-1 fw-bold">إدارة المنتجات</h3>
-                    <p class="text-muted mb-0 font-sm">لوحة التحكم / إدارة المنتجات</p>
+                <div class="d-flex align-items-center gap-4 flex-grow-1">
+                    <div>
+                        <h3 class="mb-1 fw-bold">إدارة المنتجات</h3>
+                        <p class="text-muted mb-0 font-sm">لوحة التحكم / إدارة المنتجات</p>
+                    </div>
+                    <!-- Global Search Desktop -->
+                    <div class="search-box-container m-0 d-none d-md-block" style="min-width: 300px;">
+                        <input type="text" class="form-control search-box global-search-input" placeholder="ابحث عن منتج، تصنيف، أو بانر...">
+                        <i class='bx bx-search search-icon'></i>
+                    </div>
                 </div>
-                
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-none d-lg-flex align-items-center gap-3">
+                    <!-- Theme Toggle -->
+                    <div class="theme-toggle" title="تبديل الوضع">
+                        <i class='bx bx-sun'></i>
+                    </div>
+
                     <div class="d-flex align-items-center gap-2">
                         <div class="text-end d-none d-sm-block">
                             <h6 class="mb-0 font-sm">Marmoush Store</h6>
@@ -78,22 +108,36 @@
 
             <!-- Actions Bar -->
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-                <button type="button" class="btn btn-primary d-flex align-items-center gap-2 w-sm-100 justify-content-center" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                    <i class='bx bx-plus'></i> إضافة منتج جديد
-                </button>
+                <div class="d-flex gap-2 flex-wrap w-100 w-md-auto">
+                    <button type="button" class="btn btn-primary d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0 justify-content-center" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                        <i class='bx bx-plus'></i> إضافة منتج جديد
+                    </button>
+                    <button type="button" class="btn btn-outline-success d-flex align-items-center gap-2 flex-grow-1 flex-md-grow-0 justify-content-center" id="export-excel-btn">
+                        <i class='bx bx-download'></i> تصدير إكسيل
+                    </button>
+                    <label class="btn btn-outline-info d-flex align-items-center gap-2 m-0 flex-grow-1 flex-md-grow-0 justify-content-center" for="import-excel-input">
+                        <i class='bx bx-upload'></i> استيراد إكسيل
+                        <input type="file" id="import-excel-input" class="d-none" accept=".xlsx, .xls, .csv">
+                    </label>
+                </div>
+                <div class="d-flex align-items-center gap-3 ms-auto">
+                    <div class="form-check form-switch m-0">
+                        <input class="form-check-input" type="checkbox" id="archive-toggle">
+                        <label class="form-check-label text-muted small" for="archive-toggle">عرض الأرشيف</label>
+                    </div>
+                </div>
+            </div>
 
+            <div class="filter-bar mb-4">
                 <div class="filter-actions-group flex-grow-1">
                     <div class="search-box-container">
-                        <input type="text" class="form-control search-box" id="product-search" placeholder="ابحث عن اسم المنتج...">
+                        <input type="text" class="form-control search-box" id="product-search" placeholder="ابحث في هذه الصفحة...">
                         <i class='bx bx-search search-icon'></i>
                     </div>
                     <div class="d-flex gap-2 flex-grow-1">
                         <select class="form-select bg-dark text-white border-secondary" id="category-filter">
                             <option value="all">كل الأقسام</option>
                         </select>
-                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filterModal" title="فلترة متقدمة">
-                            <i class='bx bx-filter-alt'></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -142,25 +186,36 @@
               </div>
             </div>
 
-            <!-- Table Container -->
+            <!-- Products Table Container -->
             <div class="table-container table-responsive">
                 <table class="table text-center align-middle">
                     <thead>
                         <tr>
                             <th>الصورة</th>
-                            <th>الاسم</th>
-                            <th class="d-none d-md-table-cell">التصنيف</th>
+                            <th class="text-end">الاسم</th>
+                            <th>القسم</th>
                             <th>السعر</th>
-                            <th class="d-none d-md-table-cell">الخصم</th>
-                            <th class="d-none d-md-table-cell">الحالة</th>
+                            <th>الخصم</th>
+                            <th>الحالة</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="products-table-body">
-                        <!-- Products will be injected here -->
                         <tr><td colspan="7" class="py-4 text-muted">جاري تحميل المنتجات...</td></tr>
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="pagination-container d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+                <div class="text-muted small">
+                    عرض <span id="showing-count">0</span> من <span id="total-count">0</span> منتج
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-secondary btn-sm" id="prev-page-btn" disabled>السابق</button>
+                    <div id="page-numbers" class="d-flex gap-1"></div>
+                    <button class="btn btn-outline-secondary btn-sm" id="next-page-btn" disabled>التالي</button>
+                </div>
             </div>
 
         </div>
@@ -179,7 +234,9 @@
              <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
              <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
              <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
-             <li class="nav-item"><a class="nav-link mt-auto text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+             <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
+             <li class="nav-item"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
+             <li class="nav-item"><a class="nav-link mt-5 text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
          </ul>
       </div>
     </div>
@@ -214,15 +271,61 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-muted">السعر الأصلي (جنيه)</label>
-                        <input type="number" class="form-control bg-dark text-white border-secondary" id="product-price" step="0.01" required>
+                        <input type="number" class="form-control bg-dark text-white border-secondary" id="product-price" step="0.01">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-muted">نسبة الخصم (%) - اختياري</label>
                         <input type="number" class="form-control bg-dark text-white border-secondary" id="product-discount" placeholder="0">
                     </div>
+                    <!-- New Fields -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">رقم SKU (كود المنتج)</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="product-sku" placeholder="مثال: SH-1001">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">الألوان المتاحة (افصل بفاصلة)</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="product-colors" placeholder="أحمر, أسود, أبيض">
+                    </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label text-muted">رابط الصورة</label>
+                        <label class="form-label text-muted">المقاسات المتاحة</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <div class="form-check">
+                                <input class="form-check-input size-checkbox" type="checkbox" value="S" id="size-s">
+                                <label class="form-check-label text-muted" for="size-s">S</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input size-checkbox" type="checkbox" value="M" id="size-m">
+                                <label class="form-check-label text-muted" for="size-m">M</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input size-checkbox" type="checkbox" value="L" id="size-l">
+                                <label class="form-check-label text-muted" for="size-l">L</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input size-checkbox" type="checkbox" value="XL" id="size-xl">
+                                <label class="form-check-label text-muted" for="size-xl">XL</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input size-checkbox" type="checkbox" value="XXL" id="size-xxl">
+                                <label class="form-check-label text-muted" for="size-xxl">XXL</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label text-muted">الصورة الرئيسية (رابط)</label>
                         <input type="url" class="form-control bg-dark text-white border-secondary" id="product-image-url" placeholder="https://..." required>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label text-muted d-flex justify-content-between">
+                            <span>صور إضافية (Gallery)</span>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="add-gallery-field">
+                                <i class='bx bx-plus'></i> إضافة صورة
+                            </button>
+                        </label>
+                        <div id="gallery-inputs-container" class="mt-2">
+                            <!-- Dynamic inputs will be added here -->
+                        </div>
                     </div>
                     <div class="col-12 mb-3">
                         <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
@@ -273,17 +376,61 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-muted">السعر الأصلي (جنيه)</label>
-                        <input type="number" class="form-control bg-dark text-white border-secondary" id="edit-product-price" step="0.01" required>
+                        <input type="number" class="form-control bg-dark text-white border-secondary" id="edit-product-price" step="0.01">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label text-muted">نسبة الخصم (%)</label>
                         <input type="number" class="form-control bg-dark text-white border-secondary" id="edit-product-discount">
                     </div>
+                    <!-- New Fields -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">رقم SKU</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-product-sku">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label text-muted">الألوان المتاحة (افصل بفاصلة)</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-product-colors">
+                    </div>
                     <div class="col-12 mb-3">
-                        <label class="form-label text-muted d-block">الصورة الحالية</label>
+                        <label class="form-label text-muted">المقاسات المتاحة</label>
+                        <div class="d-flex flex-wrap gap-2">
+                            <div class="form-check">
+                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="S" id="edit-size-s">
+                                <label class="form-check-label text-muted" for="edit-size-s">S</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="M" id="edit-size-m">
+                                <label class="form-check-label text-muted" for="edit-size-m">M</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="L" id="edit-size-l">
+                                <label class="form-check-label text-muted" for="edit-size-l">L</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="XL" id="edit-size-xl">
+                                <label class="form-check-label text-muted" for="edit-size-xl">XL</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="XXL" id="edit-size-xxl">
+                                <label class="form-check-label text-muted" for="edit-size-xxl">XXL</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label text-muted d-block">الصورة الرئيسية الحالية</label>
                         <div id="edit-img-preview" class="mb-2"></div>
-                        <label class="form-label text-muted">تحديث رابط الصورة</label>
-                        <input type="url" class="form-control bg-dark text-white border-secondary" id="edit-product-image-url" placeholder="رابط الصورة">
+                        <input type="url" class="form-control bg-dark text-white border-secondary mb-3" id="edit-product-image-url" placeholder="رابط الصورة الرئيسية الجديد">
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label text-muted d-flex justify-content-between">
+                            <span>صور إضافية (Gallery)</span>
+                            <button type="button" class="btn btn-sm btn-outline-primary" id="edit-add-gallery-field">
+                                <i class='bx bx-plus'></i> إضافة صورة
+                            </button>
+                        </label>
+                        <div id="edit-gallery-inputs-container" class="mt-2">
+                            <!-- Dynamic inputs will be added here -->
+                        </div>
                     </div>
                     <div class="col-12 mb-3">
                         <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
@@ -336,6 +483,7 @@
              <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
              <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
              <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
+             <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
              <li class="nav-item"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
              <li class="nav-item"><a class="nav-link mt-5 text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
          </ul>
@@ -347,6 +495,25 @@
         <div class="custom-toast" id="toast-body">
             <i class='bx bx-check-circle icon'></i>
             <span>تم الإجراء بنجاح</span>
+        </div>
+    </div>
+
+    <!-- Global Search Results Modal -->
+    <div class="modal fade" id="searchResultModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content bg-dark text-white border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title d-flex align-items-center gap-2">
+                        <i class='bx bx-search text-primary'></i> نتائج البحث الشامل
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="search-results-content">
+                        <!-- Results will be injected here -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

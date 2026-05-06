@@ -11,6 +11,8 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Theme Manager -->
+    <script src="../js/theme.js"></script>
 </head>
 <body class="text-white">
 
@@ -34,6 +36,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a>
+                </li>
                 <li class="nav-item mt-4">
                     <a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a>
                 </li>
@@ -48,20 +53,45 @@
         <div class="flex-grow-1 p-3 p-md-4" style="max-height: 100vh; overflow-y: auto;">
             
             <!-- Mobile Header -->
-            <div class="d-flex justify-content-between align-items-center d-lg-none mb-3">
-                <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
-                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile">
-                    <i class='bx bx-menu'></i>
-                </button>
+            <div class="d-lg-none mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="theme-toggle m-0" title="تبديل الوضع">
+                            <i class='bx bx-sun'></i>
+                        </div>
+                        <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center text-white"
+                            style="width: 35px; height: 35px; font-size: 0.9rem;">M</div>
+                        <button class="btn btn-outline-secondary p-1 px-2" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#sidebarMobile">
+                            <i class='bx bx-menu fs-4'></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="search-box-container w-100 m-0">
+                    <input type="text" class="form-control search-box global-search-input" placeholder="ابحث عن منتج، تصنيف، أو بانر...">
+                    <i class='bx bx-search search-icon'></i>
+                </div>
             </div>
 
             <!-- Top Header -->
             <div class="app-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-                <div>
-                    <h3 class="mb-1 fw-bold">إدارة البانرات الإعلانية</h3>
-                    <p class="text-muted mb-0 font-sm">تحكم في واجهة المتجر والعروض الترويجية</p>
+                <div class="d-flex align-items-center gap-4 flex-grow-1">
+                    <div>
+                        <h3 class="mb-1 fw-bold">إدارة البانرات الإعلانية</h3>
+                        <p class="text-muted mb-0 font-sm">تحكم في واجهة المتجر والعروض الترويجية</p>
+                    </div>
+                    <!-- Global Search Desktop -->
+                    <div class="search-box-container m-0 d-none d-md-block" style="min-width: 300px;">
+                        <input type="text" class="form-control search-box global-search-input" placeholder="ابحث عن منتج، تصنيف، أو بانر...">
+                        <i class='bx bx-search search-icon'></i>
+                    </div>
                 </div>
-                <div class="d-flex align-items-center gap-3">
+                <div class="d-none d-lg-flex align-items-center gap-3">
+                    <!-- Theme Toggle -->
+                    <div class="theme-toggle" title="تبديل الوضع">
+                        <i class='bx bx-sun'></i>
+                    </div>
                     <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">M</div>
                 </div>
             </div>
@@ -105,6 +135,7 @@
              <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
              <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
              <li class="nav-item"><a class="nav-link active" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
+             <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
              <li class="nav-item"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
              <li class="nav-item"><a class="nav-link mt-5 text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
          </ul>
