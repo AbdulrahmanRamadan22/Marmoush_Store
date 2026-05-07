@@ -1,4 +1,5 @@
 import { db } from '../firebase.js';
+import { logActivity } from './logs.js';
 import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const collectionName = "categories";
@@ -26,6 +27,7 @@ export async function getCategories() {
 export async function addCategory(categoryData) {
     try {
         const docRef = await addDoc(collection(db, collectionName), categoryData);
+        await logActivity('إضافة تصنيف', `تم إضافة تصنيف جديد: ${categoryData.name}`);
         return docRef.id;
     } catch (error) {
         console.error("Error adding category: ", error);
@@ -40,6 +42,7 @@ export async function updateCategory(categoryId, categoryData) {
     try {
         const docRef = doc(db, collectionName, categoryId);
         await updateDoc(docRef, categoryData);
+        await logActivity('تعديل تصنيف', `تم تعديل بيانات التصنيف: ${categoryData.name || categoryId}`);
         return true;
     } catch (error) {
         console.error("Error updating category: ", error);
@@ -53,6 +56,7 @@ export async function updateCategory(categoryId, categoryData) {
 export async function deleteCategory(categoryId) {
     try {
         await deleteDoc(doc(db, collectionName, categoryId));
+        await logActivity('حذف تصنيف', `تم حذف التصنيف ID: ${categoryId}`);
         return true;
     } catch (error) {
         console.error("Error deleting category: ", error);

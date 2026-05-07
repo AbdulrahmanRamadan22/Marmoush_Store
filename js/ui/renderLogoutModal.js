@@ -14,7 +14,7 @@ export function initLogoutModal() {
                             </div>
                         </div>
                         <div class="modal-body text-center">
-                            <h4 class="fw-bold text-white mb-2">تسجيل الخروج</h4>
+                            <h4 class="fw-bold mb-2">تسجيل الخروج</h4>
                             <p class="text-muted">هل أنت متأكد من رغبتك في الخروج من لوحة التحكم؟</p>
                         </div>
                         <div class="modal-footer">

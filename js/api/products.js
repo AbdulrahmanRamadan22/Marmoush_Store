@@ -1,4 +1,5 @@
 import { db, storage } from '../firebase.js';
+import { logActivity } from './logs.js';
 import { 
     collection, getDocs, addDoc, doc, deleteDoc, updateDoc, getDoc, 
     query, where, limit, startAfter, orderBy, getCountFromServer 
@@ -106,6 +107,7 @@ export async function addProduct(productData) {
             createdAt: productData.createdAt || new Date().toISOString()
         };
         const docRef = await addDoc(collection(db, collectionName), data);
+        await logActivity('إضافة منتج', `تم إضافة منتج جديد: ${data.name}`);
         return docRef.id;
     } catch (error) {
         console.error("Error adding product: ", error);
@@ -120,6 +122,7 @@ export async function updateProduct(productId, productData) {
     try {
         const docRef = doc(db, collectionName, productId);
         await updateDoc(docRef, productData);
+        await logActivity('تعديل منتج', `تم تعديل بيانات المنتج: ${productData.name || productId}`);
         return true;
     } catch (error) {
         console.error("Error updating product: ", error);
@@ -134,6 +137,7 @@ export async function deleteProduct(productId) {
     try {
         const docRef = doc(db, collectionName, productId);
         await updateDoc(docRef, { isDeleted: true, deletedAt: new Date().toISOString() });
+        await logActivity('أرشفة منتج', `تم نقل المنتج ID: ${productId} إلى الأرشيف`);
         return true;
     } catch (error) {
         console.error("Error archiving product: ", error);
@@ -148,6 +152,7 @@ export async function restoreProduct(productId) {
     try {
         const docRef = doc(db, collectionName, productId);
         await updateDoc(docRef, { isDeleted: false, deletedAt: null });
+        await logActivity('استعادة منتج', `تم استعادة المنتج ID: ${productId} من الأرشيف`);
         return true;
     } catch (error) {
         console.error("Error restoring product: ", error);

@@ -79,22 +79,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. معالجة نسيان كلمة المرور
     if (forgotPasswordLink) {
-        forgotPasswordLink.addEventListener('click', async (e) => {
+        forgotPasswordLink.addEventListener('click', (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
-            
             if (!email) {
                 showToast("يرجى إدخال بريدك الإلكتروني أولاً", "error");
                 return;
             }
+            const modalEmail = document.querySelector('#resetPasswordModal .text-primary');
+            if (modalEmail) modalEmail.innerText = email + "؟";
+        });
+    }
 
-            if (confirm(`هل تريد إرسال رابط إعادة تعيين كلمة المرور إلى ${email}؟`)) {
-                try {
-                    await resetPassword(email);
-                    showToast("تم إرسال الرابط! تفقد بريدك الإلكتروني", "success");
-                } catch (error) {
-                    showToast("خطأ: " + error.message, "error");
-                }
+    const confirmResetBtn = document.getElementById('confirmResetBtn');
+    if (confirmResetBtn) {
+        confirmResetBtn.addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value;
+            const resetModal = bootstrap.Modal.getInstance(document.getElementById('resetPasswordModal'));
+            try {
+                confirmResetBtn.disabled = true;
+                confirmResetBtn.innerHTML = 'جاري الإرسال...';
+                await resetPassword(email);
+                if (resetModal) resetModal.hide();
+                showToast("تم إرسال رابط إعادة التعيين بنجاح", "success");
+            } catch (error) {
+                showToast("خطأ في الإرسال", "error");
+            } finally {
+                confirmResetBtn.disabled = false;
+                confirmResetBtn.innerHTML = 'تأكيد الإرسال';
             }
         });
     }

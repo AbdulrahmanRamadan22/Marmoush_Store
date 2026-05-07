@@ -27,7 +27,7 @@
                     <a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a>
+                    <a class="nav-link active" href="products.html"><i class='bx bx-package'></i> المنتجات</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a>
@@ -41,10 +41,13 @@
                 <li class="nav-item mt-4">
                     <a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a>
+                </li>
             </ul>
             
-            <div class="mt-auto pt-5">
-                <a href="#" class="nav-link text-muted mt-5 logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
+            <div class="mt-4 mb-3 border-top border-secondary pt-3">
+                <a href="#" class="nav-link text-danger fw-bold logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
             </div>
         </nav>
 
@@ -59,8 +62,8 @@
                         <div class="theme-toggle m-0" title="تبديل الوضع">
                             <i class='bx bx-sun'></i>
                         </div>
-                        <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center text-white"
-                            style="width: 35px; height: 35px; font-size: 0.9rem;">M</div>
+                        <a href="profile.html" class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center text-white text-decoration-none"
+                            style="width: 35px; height: 35px; font-size: 0.9rem;" id="mobile-user-avatar">M</a>
                         <button class="btn btn-outline-secondary p-1 px-2" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#sidebarMobile">
                             <i class='bx bx-menu fs-4'></i>
@@ -92,15 +95,16 @@
                         <i class='bx bx-sun'></i>
                     </div>
 
-                    <div class="d-flex align-items-center gap-2">
+                    <a href="profile.html" class="d-flex align-items-center gap-2 text-decoration-none text-white">
                         <div class="text-end d-none d-sm-block">
-                            <h6 class="mb-0 font-sm">Marmoush Store</h6>
-                            <small class="text-muted" style="font-size: 0.75rem;">مرموش ستور</small>
+                            <h6 class="mb-0 font-sm" id="header-user-name">جاري التحميل...</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;" id="header-user-role">Marmoush Store</small>
                         </div>
-                        <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center"
+                            style="width: 40px; height: 40px;" id="desktop-user-avatar">
                             M
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 
@@ -231,12 +235,13 @@
          <!-- Links identical to desktop -->
          <ul class="nav flex-column">
              <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
-             <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
+             <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
              <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
              <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
              <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
              <li class="nav-item"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
-             <li class="nav-item"><a class="nav-link mt-5 text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+             <li class="nav-item"><a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
+             <li class="nav-item border-top border-secondary pt-3 mt-3"><a class="nav-link text-danger fw-bold logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
          </ul>
       </div>
     </div>
@@ -480,12 +485,13 @@
       <div class="offcanvas-body sidebar">
          <ul class="nav flex-column mt-3">
              <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
-             <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
+             <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
              <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
              <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
              <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
              <li class="nav-item"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
-             <li class="nav-item"><a class="nav-link mt-5 text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+             <li class="nav-item"><a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
+             <li class="nav-item border-top border-secondary pt-3 mt-3"><a class="nav-link text-danger fw-bold logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
          </ul>
       </div>
     </div>

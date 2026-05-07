@@ -4,7 +4,7 @@ import {
     collection, 
     getDocs, 
     addDoc, 
-    deleteDoc, 
+    updateDoc, 
     doc, 
     query, 
     orderBy 
@@ -27,11 +27,12 @@ export const getAllAdmins = async () => {
     }
 };
 
-// Save admin metadata to Firestore
+// Save admin metadata to Firestore (Default status: active)
 export const saveAdminMetadata = async (adminData) => {
     try {
         const docRef = await addDoc(adminsCollection, {
             ...adminData,
+            status: 'active', // 'active' or 'disabled'
             createdAt: new Date().toISOString()
         });
         return docRef.id;
@@ -41,13 +42,16 @@ export const saveAdminMetadata = async (adminData) => {
     }
 };
 
-// Delete admin metadata (Note: This doesn't delete the Auth account, which requires Admin SDK)
-export const deleteAdminMetadata = async (adminId) => {
+// Toggle admin status (Active <-> Disabled)
+export const toggleAdminStatus = async (adminId, newStatus) => {
     try {
-        await deleteDoc(doc(db, "admins", adminId));
+        const adminRef = doc(db, "admins", adminId);
+        await updateDoc(adminRef, {
+            status: newStatus
+        });
         return true;
     } catch (error) {
-        console.error("Error deleting admin metadata:", error);
+        console.error("Error toggling admin status:", error);
         throw error;
     }
 };

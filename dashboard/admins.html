@@ -25,15 +25,14 @@
             </div>
             <ul class="nav flex-column mt-5">
                 <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
-                <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
+                <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
                 <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
                 <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
                 <li class="nav-item"><a class="nav-link active" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
                 <li class="nav-item mt-4"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
+                <li class="nav-item"><a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
+                <li class="nav-item"><a href="#" class="nav-link text-muted logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
             </ul>
-            <div class="mt-auto pt-5">
-                <a href="#" class="nav-link text-muted mt-5 logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
-            </div>
         </nav>
 
         <!-- Main Content -->
@@ -46,8 +45,8 @@
                         <div class="theme-toggle m-0" title="تبديل الوضع">
                             <i class='bx bx-sun'></i>
                         </div>
-                        <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center text-white"
-                            style="width: 35px; height: 35px; font-size: 0.9rem;">M</div>
+                        <a href="profile.html" class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center text-white text-decoration-none"
+                            style="width: 35px; height: 35px; font-size: 0.9rem;" id="mobile-user-avatar">M</a>
                         <button class="btn btn-outline-secondary p-1 px-2" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#sidebarMobile">
                             <i class='bx bx-menu fs-4'></i>
@@ -84,19 +83,27 @@
                 </div>
             </div>
 
+            <!-- Mobile: Add Admin Button -->
+            <div class="d-lg-none mb-3">
+                <button type="button" class="btn btn-primary fw-bold shadow-sm w-100" data-bs-toggle="modal" data-bs-target="#addAdminModal">
+                    <i class='bx bx-user-plus'></i> إضافة مدير جديد
+                </button>
+            </div>
+
             <!-- Admins Table -->
-            <div class="table-container table-responsive">
+            <div class="admins-table-wrapper">
                 <table class="table text-center align-middle">
-                    <thead>
+                    <thead class="d-none d-md-table-header-group">
                         <tr>
                             <th>الاسم</th>
                             <th>البريد الإلكتروني</th>
-                            <th>تاريخ الإضافة</th>
+                            <th>الصلاحية</th>
+                            <th>الحالة</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="admins-table-body">
-                        <tr><td colspan="4" class="py-4 text-muted text-center">جاري تحميل المديرين...</td></tr>
+                        <tr><td colspan="5" class="py-4 text-muted text-center">جاري تحميل المديرين...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -121,7 +128,7 @@
                     <label class="form-label text-muted font-sm">البريد الإلكتروني</label>
                     <input type="email" class="form-control bg-dark text-white border-secondary" id="admin-email" required placeholder="admin@marmoush.com">
                 </div>
-                <div class="mb-4">
+                <div class="mb-3">
                     <label class="form-label text-muted font-sm">كلمة المرور</label>
                     <div class="password-wrapper">
                         <input type="password" class="form-control bg-dark text-white border-secondary" id="admin-password" required placeholder="********">
@@ -129,6 +136,13 @@
                             <i class='bx bx-show fs-5'></i>
                         </button>
                     </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted font-sm">الصلاحيات</label>
+                    <select id="admin-role" class="form-select bg-dark text-white border-secondary">
+                        <option value="admin">مدير كامل (Full Admin)</option>
+                        <option value="editor" selected>مدير محتوى (Editor)</option>
+                    </select>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">إضافة المدير الآن</button>
             </form>
@@ -146,12 +160,13 @@
       <div class="offcanvas-body sidebar">
          <ul class="nav flex-column mt-3">
              <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
-             <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-t-shirt'></i> المنتجات</a></li>
+             <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
              <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
              <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
              <li class="nav-item"><a class="nav-link active" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
              <li class="nav-item"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
-             <li class="nav-item mt-4"><a class="nav-link text-muted logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+             <li class="nav-item"><a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
+             <li class="nav-item border-top border-secondary pt-3 mt-3"><a class="nav-link text-danger fw-bold logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
          </ul>
       </div>
     </div>
@@ -167,28 +182,9 @@
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Firebase Compat SDKs (Required for Secondary App in admins.js) -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-
-    <!-- Independent Logic Script (Password Toggle & Premium Logout) -->
+    <!-- Password Toggle & Logout Modal Logic -->
     <script>
-        // تعريف Firebase للمرة الأولى في الصفحة لضمان عمل الخروج
-        const firebaseConfig = {
-            apiKey: "AIzaSyDc6__7P-PLVYc-LbkIIT7eodhtIiWDmdY",
-            authDomain: "marmoushstore.firebaseapp.com",
-            projectId: "marmoushstore",
-            storageBucket: "marmoushstore.appspot.com",
-            messagingSenderId: "618729148961",
-            appId: "1:618729148961:web:8f2d48b52bd039eb5d4960"
-        };
-        
-        // منع الخطأ إذا تم تعريفه مسبقاً
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-
-        // 1. منطق إظهار وإخفاء كلمة المرور
+        // 1. Password toggle logic
         document.addEventListener('click', function(e) {
             const btn = e.target.closest('#toggle-admin-password');
             if (btn) {
@@ -205,7 +201,7 @@
             }
         });
 
-        // 2. منطق كارت تسجيل الخروج (مباشر ومستقل)
+        // 2. Logout modal trigger
         document.addEventListener('click', function(e) {
             const logoutBtn = e.target.closest('.logout-btn');
             if (logoutBtn) {
@@ -214,20 +210,29 @@
                 modal.show();
             }
         });
+    </script>
 
-        function executeLogout() {
+    <!-- Logout execution (modular SDK) -->
+    <script type="module">
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+
+        window.executeLogout = async function() {
             const btn = document.getElementById('confirmLogoutAction');
             btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> جاري الخروج...';
             btn.disabled = true;
-
-            firebase.auth().signOut().then(() => {
-                window.location.href = 'login.html';
-            }).catch(err => {
+            try {
+                const mainApp = getApps().find(a => a.name === '[DEFAULT]');
+                if (mainApp) {
+                    const auth = getAuth(mainApp);
+                    await signOut(auth);
+                }
+            } catch(err) {
                 console.error("Logout Error:", err);
-                alert("حدث خطأ، سيتم توجيهك للوجن");
+            } finally {
                 window.location.href = 'login.html';
-            });
-        }
+            }
+        };
     </script>
 
     <!-- Logout Confirmation Modal (Premium) -->
@@ -251,27 +256,25 @@
         </div>
     </div>
 
-    <!-- Delete Admin Confirmation Modal (Premium & Strict) -->
-    <div class="modal fade modal-confirm-premium" id="deleteAdminConfirmModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
-            <div class="modal-content border-0">
-                <div class="modal-header">
-                    <div class="delete-icon-wrapper">
-                        <i class='bx bx-trash-alt'></i>
+    <!-- Toggle Admin Status Confirmation Modal -->
+    <div class="modal" id="statusAdminConfirmModal" tabindex="-1" aria-hidden="true" style="z-index: 9999;">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+            <div class="modal-content" style="background: #1a1d23; border: 1px solid #3d4451; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);">
+                <div class="modal-header d-flex flex-column align-items-center pt-4 pb-0 border-0">
+                    <div id="status-modal-icon" style="width: 70px; height: 70px; background: rgba(220, 53, 69, 0.1); color: #ff4d5e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin-bottom: 15px;">
+                        <i class='bx bx-lock-alt'></i>
                     </div>
+                    <h4 class="fw-bold text-white mb-2" id="status-modal-title">تأكيد الإجراء</h4>
                 </div>
-                <div class="modal-body text-center">
-                    <h4 class="fw-bold text-white mb-3">تأكيد حذف المسؤول</h4>
-                    <p class="text-muted mb-4">هذا الإجراء لا يمكن التراجع عنه. يرجى كتابة البريد الإلكتروني للمسؤول أدناه للتأكيد:</p>
-                    
-                    <div class="mb-3">
-                        <label class="form-label text-danger font-sm fw-bold mb-2" id="target-admin-email-label"></label>
-                        <input type="email" class="form-control confirm-email-input" id="confirm-delete-email" placeholder="أدخل البريد الإلكتروني هنا">
-                    </div>
+                <div class="modal-body text-center px-4">
+                    <p class="text-muted mb-3" style="font-size: 0.9rem;" id="status-modal-desc">
+                        هل أنت متأكد من تغيير حالة هذا المسؤول؟
+                    </p>
+                    <div class="p-2 mb-4 rounded bg-dark text-white fw-bold" id="target-admin-email-label" style="font-size: 0.85rem; border: 1px dashed #3d4451;"></div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel-logout" data-bs-dismiss="modal">إلغاء</button>
-                    <button type="button" class="btn-confirm-delete" id="confirmDeleteAdminAction" disabled>تأكيد الحذف النهائي</button>
+                <div class="modal-footer border-0 pb-4 px-4 d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary w-100" data-bs-dismiss="modal" style="border-radius: 12px; border: 1px solid #3d4451; color: #a0aec0;">إلغاء</button>
+                    <button type="button" id="confirmStatusAdminAction" class="btn btn-danger w-100 shadow-sm" style="border-radius: 12px;">تأكيد</button>
                 </div>
             </div>
         </div>

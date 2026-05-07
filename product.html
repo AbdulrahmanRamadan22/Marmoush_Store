@@ -25,18 +25,248 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Navbar Component -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Preloader -->
+    <div id="preloader">
+        <img src="assets/logo.jpeg" class="loader-logo" alt="Marmoush Store Logo">
+        <div class="loader-text">مرموش ستور</div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top main-navbar">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Marmoush Store</a>
+            <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+                <img src="assets/logo.jpeg" alt="Logo" class="rounded-circle logo-img">
+                <span class="fw-bold">مرموش ستور</span>
+            </a>
+            
+            <div class="d-flex gap-3 order-lg-last">
+                <a href="#" class="nav-icon-link" title="بحث">
+                    <i class='bx bx-search'></i>
+                </a>
+                <a href="#" class="nav-icon-link position-relative" title="السلة">
+                    <i class='bx bx-shopping-bag'></i>
+                    <span class="badge-cart">0</span>
+                </a>
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <i class='bx bx-menu-alt-right fs-1'></i>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="products.html">المنتجات</a></li>
+                    <li class="nav-item"><a class="nav-link" href="category.html">الأقسام</a></li>
+                    <li class="nav-item"><a class="nav-link" href="offers.html">العروض</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">تواصل معنا</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h1>Product</h1>
-        <p>Placeholder content for Product</p>
-        <div id="content-area"></div>
+    <!-- Breadcrumb -->
+    <div class="bg-dark border-bottom border-secondary py-3">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 font-sm">
+                    <li class="breadcrumb-item"><a href="index.html" class="text-muted text-decoration-none"><i class='bx bx-home-alt'></i> الرئيسية</a></li>
+                    <li class="breadcrumb-item"><a href="products.html" class="text-muted text-decoration-none">المنتجات</a></li>
+                    <li class="breadcrumb-item active text-white fw-bold" aria-current="page" id="breadcrumb-product-name">جاري التحميل...</li>
+                </ol>
+            </nav>
+        </div>
     </div>
+
+    <!-- Product Details Section -->
+    <section class="py-5 product-details-section">
+        <div class="container">
+            <div id="product-loading" class="text-center py-5 my-5">
+                <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+                <h5 class="text-muted mt-3">جاري تحميل تفاصيل المنتج...</h5>
+            </div>
+
+            <div id="product-content" class="row g-5 d-none">
+                <!-- Right Column: Image Gallery -->
+                <div class="col-lg-6">
+                    <div class="product-gallery-wrapper sticky-lg-top" style="top: 100px;">
+                        <div class="main-image-container mb-3 position-relative rounded-4 overflow-hidden shadow-premium">
+                            <!-- Discount Badge will be injected here if exists -->
+                            <div id="product-badge-container"></div>
+                            <img src="assets/placeholder.png" alt="Product" id="main-product-image" class="w-100 object-fit-cover" style="aspect-ratio: 4/5; cursor: zoom-in; transition: transform 0.3s ease;">
+                        </div>
+                        <div class="thumbnails-container d-flex gap-2 overflow-auto pb-2" id="product-thumbnails">
+                            <!-- Thumbnails will be injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Left Column: Product Info -->
+                <div class="col-lg-6">
+                    <div class="product-info-wrapper">
+                        <div class="mb-2">
+                            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary px-3 py-2 rounded-pill font-sm" id="product-category-badge">التصنيف</span>
+                        </div>
+                        <h1 class="fw-bold text-white mb-3" id="product-title">اسم المنتج</h1>
+                        
+                        <div class="price-container mb-4 d-flex align-items-center gap-3">
+                            <h2 class="text-primary fw-bold mb-0" id="product-price">0 ج.م</h2>
+                            <span class="text-muted text-decoration-line-through fs-5 d-none" id="product-old-price">0 ج.م</span>
+                        </div>
+
+                        <!-- Options Section -->
+                        <div class="options-wrapper bg-card p-4 rounded-4 border border-secondary mb-4 shadow-sm">
+                            
+                            <!-- Colors -->
+                            <div class="mb-4" id="color-selection-container">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-white mb-0">اختر اللون:</h6>
+                                    <span class="text-muted font-sm" id="selected-color-name"></span>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2" id="product-colors">
+                                    <!-- Colors injected here -->
+                                </div>
+                            </div>
+
+                            <!-- Sizes -->
+                            <div class="mb-4" id="size-selection-container">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-white mb-0">اختر المقاس:</h6>
+                                    <a href="#" class="text-primary font-sm text-decoration-none"><i class='bx bx-ruler'></i> دليل المقاسات</a>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2" id="product-sizes">
+                                    <!-- Sizes injected here -->
+                                </div>
+                            </div>
+
+                            <!-- Quantity -->
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-white mb-2">الكمية:</h6>
+                                <div class="d-inline-flex align-items-center bg-dark border border-secondary rounded-pill p-1">
+                                    <button class="btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center" id="btn-decrease-qty" style="width: 35px; height: 35px;">
+                                        <i class='bx bx-minus'></i>
+                                    </button>
+                                    <input type="number" id="product-quantity" value="1" min="1" class="form-control bg-transparent border-0 text-center text-white fw-bold px-0 shadow-none" style="width: 50px; outline: none;" readonly>
+                                    <button class="btn btn-sm btn-primary rounded-circle d-flex align-items-center justify-content-center" id="btn-increase-qty" style="width: 35px; height: 35px;">
+                                        <i class='bx bx-plus'></i>
+                                    </button>
+                                </div>
+                                <small class="text-muted ms-3 d-none" id="product-stock-alert">متبقي <span id="stock-count"></span> قطع فقط!</small>
+                            </div>
+
+                        </div> <!-- End Options Wrapper -->
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-3 mb-5 action-buttons-wrapper">
+                            <button class="btn btn-primary flex-grow-1 py-3 rounded-pill fw-bold fs-5 shadow-premium btn-hover-scale d-flex align-items-center justify-content-center gap-2" id="btn-add-to-cart">
+                                <i class='bx bx-shopping-bag fs-4'></i> إضافة إلى السلة
+                            </button>
+                            <button class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center btn-hover-scale" style="width: 60px; height: 60px;" title="إضافة للمفضلة">
+                                <i class='bx bx-heart fs-4'></i>
+                            </button>
+                        </div>
+
+                        <!-- Accordion Details -->
+                        <div class="accordion custom-accordion" id="productAccordion">
+                            <!-- Description -->
+                            <div class="accordion-item bg-transparent border-secondary border-start-0 border-end-0 border-top-0 rounded-0 mb-2">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button bg-transparent text-white fw-bold shadow-none px-0 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc" aria-expanded="true">
+                                        <i class='bx bx-file text-primary me-2 fs-5'></i> تفاصيل المنتج
+                                    </button>
+                                </h2>
+                                <div id="collapseDesc" class="accordion-collapse collapse show" data-bs-parent="#productAccordion">
+                                    <div class="accordion-body px-0 text-muted" id="product-description" style="line-height: 1.8;">
+                                        <!-- Desc injected here -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Shipping -->
+                            <div class="accordion-item bg-transparent border-secondary border-start-0 border-end-0 border-top-0 rounded-0 mb-2">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-transparent text-white fw-bold shadow-none px-0 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping">
+                                        <i class='bx bx-truck text-primary me-2 fs-5'></i> الشحن والتوصيل
+                                    </button>
+                                </h2>
+                                <div id="collapseShipping" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                                    <div class="accordion-body px-0 text-muted" style="line-height: 1.8;">
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="mb-2"><i class='bx bx-check text-success'></i> شحن سريع لجميع محافظات مصر.</li>
+                                            <li class="mb-2"><i class='bx bx-check text-success'></i> التوصيل داخل القاهرة والجيزة خلال 24-48 ساعة.</li>
+                                            <li><i class='bx bx-check text-success'></i> المحافظات الأخرى خلال 3-5 أيام عمل.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Returns -->
+                            <div class="accordion-item bg-transparent border-secondary border-start-0 border-end-0 border-top-0 rounded-0">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-transparent text-white fw-bold shadow-none px-0 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReturns">
+                                        <i class='bx bx-refresh text-primary me-2 fs-5'></i> سياسة الاسترجاع
+                                    </button>
+                                </h2>
+                                <div id="collapseReturns" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                                    <div class="accordion-body px-0 text-muted" style="line-height: 1.8;">
+                                        لك الحق في استرجاع أو استبدال المنتج خلال 14 يوماً من تاريخ الاستلام، بشرط أن يكون المنتج في حالته الأصلية وبغلافه.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div> <!-- End Product Content -->
+        </div>
+    </section>
+
+    <!-- Mobile Sticky Add to Cart Bar -->
+    <div class="mobile-sticky-cart d-lg-none bg-card border-top border-secondary p-3 shadow-premium" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1030; transform: translateY(100%); transition: transform 0.3s ease;">
+        <div class="d-flex align-items-center gap-3">
+            <div class="flex-shrink-0">
+                <h5 class="text-primary fw-bold mb-0 m-price-sticky">0 ج.م</h5>
+            </div>
+            <button class="btn btn-primary flex-grow-1 rounded-pill fw-bold shadow-sm" id="btn-add-to-cart-mobile">
+                <i class='bx bx-shopping-bag'></i> إضافة للسلة
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer pt-5 pb-3 mt-auto">
+        <div class="container text-center text-md-end">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="footer-brand mb-3">
+                        <img src="assets/logo.jpeg" alt="Logo" class="rounded-circle mb-2" style="width: 60px;">
+                        <h4 class="fw-bold text-white">مرموش ستور</h4>
+                    </div>
+                    <p class="text-muted font-sm">وجهتك الأولى لأفضل المنتجات والملابس الرياضية بأعلى جودة وأفضل سعر في مصر.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-white mb-3">روابط سريعة</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="products.html">كل المنتجات</a></li>
+                        <li><a href="offers.html">العروض والخصومات</a></li>
+                        <li><a href="contact.html">تواصل معنا</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 class="text-white mb-3">تواصل معنا</h5>
+                    <div class="social-links d-flex gap-3 justify-content-center justify-content-md-start mb-3">
+                        <a href="#" class="social-icon" id="footer-fb"><i class='bx bxl-facebook'></i></a>
+                        <a href="#" class="social-icon" id="footer-ig"><i class='bx bxl-instagram'></i></a>
+                        <a href="#" class="social-icon" id="footer-wa"><i class='bx bxl-whatsapp'></i></a>
+                    </div>
+                    <p class="text-muted font-sm mb-1" id="footer-phone"><i class='bx bx-phone'></i> 01000000000</p>
+                    <p class="text-muted font-sm" id="footer-email"><i class='bx bx-envelope'></i> info@marmoush.com</p>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <p class="text-center text-muted font-sm mb-0">جميع الحقوق محفوظة &copy; 2024 مرموش ستور</p>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

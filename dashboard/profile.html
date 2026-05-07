@@ -1,0 +1,315 @@
+<!-- /dashboard/profile.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - حسابي | مرموش ستور</title>
+    <!-- Bootstrap 5 CSS (RTL) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Theme Manager -->
+    <script src="../js/theme.js"></script>
+    <style>
+        .profile-header-card {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.1) 0%, rgba(13, 110, 253, 0) 100%);
+            border: 1px solid rgba(13, 110, 253, 0.2);
+        }
+        .avatar-lg {
+            width: 100px;
+            height: 100px;
+            font-size: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #0d6efd;
+            color: white;
+            box-shadow: 0 10px 20px rgba(13, 110, 253, 0.3);
+        }
+        .security-card {
+            border-top: 3px solid #dc3545;
+        }
+        /* Chic Toast System */
+        .chic-container {
+            position: fixed;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-120px);
+            z-index: 1000000;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .chic-container.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .chic-card {
+            background: #1e293b;
+            border: 2px solid #0d6efd;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 50px; /* Capsule Shape */
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 20px rgba(13, 110, 253, 0.15);
+            min-width: 320px;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .chic-card.error {
+            border-color: #ef4444 !important;
+            background: #2d1b1b;
+            box-shadow: 0 15px 35px rgba(239, 68, 68, 0.2);
+        }
+        .chic-card i { font-size: 1.6rem; }
+        .chic-card span { font-weight: 700; font-size: 1rem; }
+    </style>
+</head>
+<body class="text-white">
+
+    <div class="d-flex">
+        <!-- Sidebar Component (Desktop) -->
+        <nav class="sidebar p-3 d-none d-lg-block" style="width: 260px;">
+            <div class="text-center mb-4 mt-2">
+                <img src="../assets/logo.jpeg" alt="Marmoush Store Logo" style="width: 80px; height: 80px; border-radius: 50%; box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); margin-bottom: 10px;">
+                <h5 class="text-white mb-0 fw-bold">مرموش ستور</h5>
+            </div>
+            <ul class="nav flex-column mt-5">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="products.html"><i class='bx bx-package'></i> المنتجات</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a>
+                </li>
+                <li class="nav-item mt-4">
+                    <a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a>
+                </li>
+            </ul>
+            
+            <div class="mt-4 mb-3 border-top border-secondary pt-3">
+                <a href="#" class="nav-link text-danger fw-bold logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-3 p-md-4" style="max-height: 100vh; overflow-y: auto;">
+            
+            <!-- Mobile Header -->
+            <div class="d-lg-none mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="theme-toggle m-0" title="تبديل الوضع">
+                            <i class='bx bx-sun'></i>
+                        </div>
+                        <a href="profile.html" class="rounded-circle bg-primary border border-primary d-flex align-items-center justify-content-center text-white text-decoration-none"
+                            style="width: 35px; height: 35px; font-size: 0.9rem;" id="mobile-user-avatar">M</a>
+                        <button class="btn btn-outline-secondary p-1 px-2" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#sidebarMobile">
+                            <i class='bx bx-menu fs-4'></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Header -->
+            <div class="app-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <div class="d-flex align-items-center gap-4 flex-grow-1">
+                    <div>
+                        <h3 class="mb-1 fw-bold">حسابي الشخصي</h3>
+                        <p class="text-muted mb-0 font-sm">إدارة بياناتك الشخصية وإعدادات الأمان</p>
+                    </div>
+                </div>
+                <div class="d-none d-lg-flex align-items-center gap-3">
+                    <div class="theme-toggle" title="تبديل الوضع">
+                        <i class='bx bx-sun'></i>
+                    </div>
+                    <a href="profile.html" class="d-flex align-items-center gap-2 text-decoration-none text-white">
+                        <div class="text-end d-none d-sm-block">
+                            <h6 class="mb-0 font-sm" id="header-user-name">جاري التحميل...</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;" id="header-user-role">مدير</small>
+                        </div>
+                        <div class="rounded-circle bg-primary border border-primary d-flex align-items-center justify-content-center"
+                            style="width: 40px; height: 40px;" id="desktop-user-avatar">
+                            M
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="row g-4">
+                <!-- User Details Summary -->
+                <div class="col-12">
+                    <div class="card bg-dark profile-header-card p-4 rounded-4">
+                        <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+                            <div class="avatar-lg fw-bold" id="main-avatar">A</div>
+                            <div class="text-center text-md-start flex-grow-1">
+                                <h2 class="fw-bold mb-1" id="profile-name">...</h2>
+                                <p class="text-muted mb-3" id="profile-email">...</p>
+                                <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
+                                    <span class="badge bg-primary-subtle text-primary px-3 py-2" id="profile-role-badge">
+                                        <i class='bx bx-shield'></i> جاري التحميل
+                                    </span>
+                                    <span class="badge bg-success-subtle text-success px-3 py-2" id="profile-status-badge">
+                                        <i class='bx bx-check-circle'></i> نشط
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Info -->
+                <div class="col-lg-6">
+                    <div class="card bg-dark border-secondary p-4 h-100 rounded-4">
+                        <h5 class="mb-4 text-primary"><i class='bx bx-edit-alt'></i> المعلومات الأساسية</h5>
+                        <form id="edit-profile-form">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">الاسم الكامل</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-muted"><i class='bx bx-user'></i></span>
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-name" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label text-muted small">البريد الإلكتروني (لا يمكن تغييره)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-muted"><i class='bx bx-envelope'></i></span>
+                                    <input type="email" class="form-control bg-dark text-muted border-secondary" id="edit-email" disabled>
+                                </div>
+                                <small class="text-secondary mt-1 d-block">تغيير البريد الإلكتروني يتطلب التواصل مع الدعم الفني لدواع أمنية.</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm" id="btn-update-profile">حفظ التغييرات</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Security / Change Password -->
+                <div class="col-lg-6">
+                    <div class="card bg-dark border-secondary security-card p-4 h-100 rounded-4">
+                        <h5 class="mb-4 text-danger"><i class='bx bx-lock-alt'></i> إعدادات الأمان</h5>
+                        <form id="change-password-form">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">كلمة المرور الحالية</label>
+                                <div class="input-group password-wrapper">
+                                    <span class="input-group-text bg-dark border-secondary text-muted"><i class='bx bx-key'></i></span>
+                                    <input type="password" class="form-control bg-dark text-white border-secondary" id="current-password" required placeholder="أدخل كلمة المرور الحالية لتأكيد هويتك">
+                                    <button type="button" class="btn btn-outline-secondary border-secondary toggle-password" data-target="current-password"><i class='bx bx-show'></i></button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">كلمة المرور الجديدة</label>
+                                <div class="input-group password-wrapper">
+                                    <span class="input-group-text bg-dark border-secondary text-muted"><i class='bx bx-lock-open'></i></span>
+                                    <input type="password" class="form-control bg-dark text-white border-secondary" id="new-password" required placeholder="6 أحرف على الأقل">
+                                    <button type="button" class="btn btn-outline-secondary border-secondary toggle-password" data-target="new-password"><i class='bx bx-show'></i></button>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label text-muted small">تأكيد كلمة المرور الجديدة</label>
+                                <div class="input-group password-wrapper">
+                                    <span class="input-group-text bg-dark border-secondary text-muted"><i class='bx bx-check-shield'></i></span>
+                                    <input type="password" class="form-control bg-dark text-white border-secondary" id="confirm-password" required placeholder="أعد كتابة كلمة المرور الجديدة">
+                                    <button type="button" class="btn btn-outline-secondary border-secondary toggle-password" data-target="confirm-password"><i class='bx bx-show'></i></button>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-danger w-100 fw-bold shadow-sm" id="btn-change-password">تغيير كلمة المرور</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Mobile Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="sidebarMobile">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title">مرموش ستور</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body sidebar">
+             <ul class="nav flex-column mt-3">
+                 <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
+                 <li class="nav-item"><a class="nav-link" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
+                 <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
+                 <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
+                 <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
+                 <li class="nav-item"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
+                 <li class="nav-item"><a class="nav-link active" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
+             </ul>
+             <div class="mt-4 mb-3 border-top border-secondary pt-3">
+                <a href="#" class="nav-link text-danger fw-bold logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chic Toast Notification -->
+    <div class="chic-container" id="toast-notification">
+        <div class="chic-card" id="toast-body">
+            <i class='bx bx-check-circle'></i>
+            <span>تم التنفيذ بنجاح</span>
+        </div>
+    </div>
+
+    <!-- Premium Reset Password Confirmation Modal -->
+    <div class="modal fade premium-modal" id="resetPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="confirm-icon">
+                        <i class='bx bx-mail-send'></i>
+                    </div>
+                    <h4 class="modal-title mb-3">إعادة تعيين كلمة المرور</h4>
+                    <p class="text-muted mb-0">هل تريد إرسال رابط إعادة تعيين كلمة المرور إلى</p>
+                    <p class="fw-bold text-primary mb-4">abdulrahmanramadan22@gmail.com؟</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-confirm" id="confirmResetBtn">تأكيد الإرسال</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Firebase Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="../js/pages/profile.js"></script>
+
+    <!-- Inline Debug Script (to catch issues if external JS fails to load) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('btn-change-password');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    console.log("Debug: Button clicked manually");
+                    if (!window.auth) {
+                        console.warn("Debug: Firebase/Profile.js might not be loaded yet or blocked.");
+                    }
+                });
+            } else {
+                console.error("Debug: Button NOT found in DOM!");
+            }
+        });
+    </script>
+</body>
+</html>

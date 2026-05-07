@@ -1,5 +1,6 @@
 // /js/api/settings.js
 import { db } from '../firebase.js';
+import { logActivity } from './logs.js';
 import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const SETTINGS_DOC_ID = "contact_settings";
@@ -51,6 +52,7 @@ export async function saveSettings(settingsData) {
     try {
         const docRef = doc(db, collectionName, SETTINGS_DOC_ID);
         await setDoc(docRef, settingsData, { merge: true });
+        await logActivity('تعديل الإعدادات', 'تم تحديث إعدادات المتجر والتواصل');
         return true;
     } catch (error) {
         console.error("Error saving settings: ", error);

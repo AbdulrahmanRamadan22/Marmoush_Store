@@ -1,4 +1,5 @@
 import { getProducts, addProduct, updateProduct, deleteProduct, getProductsCount, restoreProduct } from '../api/products.js';
+import { getRecentLogs } from '../api/logs.js';
 import { getCategories, addCategory, updateCategory, deleteCategory, checkCategoryExists } from '../api/categories.js';
 import { getBanners, addBanner, updateBanner, deleteBanner } from '../api/banners.js';
 import { getSettings, saveSettings } from '../api/settings.js';
@@ -33,7 +34,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('Dashboard page initialized');
     
     // 1. Auth Guard
-    requireAuth((user) => {
+    let currentUserProfile = null;
+
+    // 1. Auth Guard
+    requireAuth(async (user) => {
+        currentUserProfile = user;
+        console.log('User role:', user.role);
+
+        // UI Adjustments based on role
+        if (user.role === 'editor') {
+            document.body.classList.add('is-editor');
+        }
         console.log("Logged in as:", user.email);
     });
 
@@ -326,11 +337,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const available = allProducts.filter(p => p.isAvailable !== false).length;
                         if (document.getElementById('stat-available')) document.getElementById('stat-available').innerText = available;
 
+                        const totalViews = allProducts.reduce((sum, p) => sum + (p.views || 0), 0);
+                        if (document.getElementById('stat-views')) document.getElementById('stat-views').innerText = totalViews.toLocaleString('ar-EG');
+
                         const sorted = [...allProducts].sort((a, b) => (b.views || 0) - (a.views || 0));
                         
                         // Defensive checks for Chart and Most Viewed
                         if (typeof renderCharts === 'function') renderCharts(allProducts);
                         if (typeof renderMostViewedTable === 'function') renderMostViewedTable(sorted.slice(0, 5));
+                        
+                        // Render Activity Log
+                        renderActivityLog();
                     } catch (homeErr) {
                         console.error("Home stats rendering error:", homeErr);
                     }
@@ -1218,8 +1235,8 @@ function renderMostViewedTable(products) {
     const tbody = document.getElementById('most-viewed-table-body');
     if (!tbody) return;
 
-    if (!products.length || products.every(p => !p.views)) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-muted">لا يوجد بيانات مشاهدات كافية بعد. قم بزيارة صفحات المنتجات لتبدأ الحساب.</td></tr>`;
+    if (!products.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-muted">لا يوجد منتجات لعرضها حالياً.</td></tr>`;
         return;
     }
 
@@ -1279,4 +1296,41 @@ function renderMostViewedTable(products) {
 
         return desktopRow + mobileCard;
     }).join('');
+}
+async function renderActivityLog() {
+    const tableBody = document.getElementById('activity-log-table-body');
+    if (!tableBody) return;
+
+    try {
+        const logs = await getRecentLogs(10);
+        if (logs.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-muted">لا يوجد نشاط مسجل بعد</td></tr>';
+            return;
+        }
+
+        tableBody.innerHTML = logs.map(log => {
+            const date = log.timestamp ? new Date(log.timestamp.seconds * 1000).toLocaleString('ar-EG') : '...';
+            return `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 25px; height: 25px; font-size: 0.7rem;">${log.adminEmail ? log.adminEmail[0].toUpperCase() : 'A'}</div>
+                            <span class="font-sm">${log.adminEmail || 'Unknown'}</span>
+                        </div>
+                    </td>
+                    <td><span class="badge bg-info-subtle text-info font-sm">${log.action}</span></td>
+                    <td class="text-muted font-sm">${log.details}</td>
+                    <td class="text-muted font-sm" dir="ltr">${date}</td>
+                </tr>
+            `;
+        }).join('');
+    } catch (error) {
+        console.error("Error rendering logs:", error);
+        tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">خطأ في تحميل السجل</td></tr>';
+    }
+}
+
+// Global scope check for Editor
+function isUserEditor() {
+    return currentUserProfile && currentUserProfile.role === 'editor';
 }
