@@ -5,466 +5,485 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تفاصيل المنتج - مرموش ستور</title>
-    <!-- Bootstrap 5 RTL -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
-    <!-- Boxicons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/style.css">
-    <!-- Theme Manager -->
     <script src="../js/theme.js"></script>
     <style>
-        /* ===== Product Details - Mobile First ===== */
-        .product-details-container {
-            max-width: 1000px;
-            margin: 0 auto;
+        /* ===== Premium Product Details ===== */
+        .pd-wrapper { max-width: 1100px; margin: 0 auto; }
+
+        /* Glass Card */
+        .pd-glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            border-top: 2px solid rgba(13,110,253,0.6);
         }
 
-        .detail-card {
-            background: linear-gradient(145deg, #111827, #0b0f19);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        /* === Mobile Hero Image === */
-        .product-hero-img-wrap {
+        /* Image Panel */
+        .pd-image-panel {
+            background: #060913;
             position: relative;
-            width: 100%;
-            border-radius: 20px;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
-
-        .product-main-img {
+        .pd-image-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(6,9,19,0.6) 100%);
+            pointer-events: none;
+        }
+        .pd-main-img {
             width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            display: block;
+            height: 100%;
+            min-height: 480px;
+            object-fit: contain;
+            padding: 24px;
+            transition: transform 0.6s cubic-bezier(.19,1,.22,1);
         }
+        .pd-image-panel:hover .pd-main-img { transform: scale(1.04); }
 
-        /* === Product Header Strip (Mobile) === */
-        .product-meta-strip {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .category-badge {
-            background: rgba(13, 110, 253, 0.1);
-            color: var(--primary-color);
-            border: 1px solid rgba(13, 110, 253, 0.2);
-            padding: 5px 14px;
-            border-radius: 10px;
-            font-size: 0.82rem;
-            font-weight: 600;
-        }
-
-        .status-badge {
-            padding: 5px 14px;
+        /* Status Badge on image */
+        .pd-status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            padding: 8px 18px;
             border-radius: 50px;
-            font-weight: 600;
             font-size: 0.82rem;
-        }
-
-        /* === Price Section === */
-        .price-block {
+            font-weight: 700;
             display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(12px);
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .pulse { width: 8px; height: 8px; border-radius: 50%; }
+        .pulse.green { background: #22c55e; animation: pulse-anim 2s infinite; }
+        .pulse.red { background: #ef4444; }
+        @keyframes pulse-anim {
+            0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+            50% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
         }
 
-        .price-tag {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #60a5fa;
-            line-height: 1;
-        }
+        /* Info Panel */
+        .pd-info-panel { padding: 44px 40px; display: flex; flex-direction: column; justify-content: center; gap: 24px; }
 
-        .old-price-tag {
-            font-size: 1rem;
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        /* === Info Chips === */
-        .info-chip {
+        .pd-category-tag {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            padding: 8px 14px;
+            background: rgba(13,110,253,0.12);
+            border: 1px solid rgba(13,110,253,0.25);
+            color: #60a5fa;
+            padding: 6px 16px;
+            border-radius: 50px;
             font-size: 0.85rem;
-            color: #cbd5e1;
+            font-weight: 700;
+            width: fit-content;
         }
 
-        /* === Description Box === */
-        .desc-box {
-            background: rgba(255, 255, 255, 0.02);
+        .pd-title {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.15;
+            margin: 0;
+        }
+
+        .pd-price-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .pd-price {
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: #60a5fa;
+            line-height: 1;
+        }
+        .pd-old-price {
+            font-size: 1.1rem;
+            color: #475569;
+            text-decoration: line-through;
+        }
+        .pd-discount-badge {
+            background: linear-gradient(135deg,#ef4444,#dc2626);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 50px;
+        }
+
+        /* Section label */
+        .pd-section-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Description */
+        .pd-desc {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.06);
             border-radius: 16px;
-            padding: 16px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            line-height: 1.9;
+            padding: 18px 22px;
             color: #94a3b8;
+            line-height: 1.9;
             font-size: 0.95rem;
         }
 
-        /* === Size / Color Pills === */
-        .pill-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
+        /* Pills */
+        .pill-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
         .size-pill {
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.12);
             color: #e2e8f0;
             border-radius: 10px;
-            padding: 6px 16px;
-            font-weight: 600;
+            padding: 7px 18px;
+            font-weight: 700;
             font-size: 0.9rem;
+            transition: all 0.2s;
         }
-
         .color-pill {
             background: rgba(13,110,253,0.08);
             border: 1px solid rgba(13,110,253,0.2);
             color: #60a5fa;
             border-radius: 10px;
-            padding: 6px 16px;
+            padding: 7px 18px;
             font-size: 0.9rem;
+            font-weight: 600;
         }
 
-        /* === Stats Row (bottom meta) === */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .stat-chip {
+        /* Stats Row */
+        .pd-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+        .pd-stat {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.06);
             border-radius: 16px;
-            padding: 14px 10px;
+            padding: 16px 12px;
             text-align: center;
+            transition: border-color 0.2s;
+        }
+        .pd-stat:hover { border-color: rgba(13,110,253,0.3); }
+        .pd-stat .s-label { font-size: 0.72rem; color: #64748b; display: block; margin-bottom: 6px; font-weight: 600; }
+        .pd-stat .s-value { font-size: 0.9rem; font-weight: 800; color: #e2e8f0; }
+
+        /* Action Buttons */
+        .pd-actions { display: flex; gap: 14px; margin-top: 6px; }
+        .btn-pd-edit {
+            flex: 3;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border: none;
+            padding: 16px 24px;
+            border-radius: 16px;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(37,99,235,0.3);
+        }
+        .btn-pd-edit:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(37,99,235,0.45); }
+        .btn-pd-delete {
+            flex: 1;
+            background: rgba(239,68,68,0.08);
+            border: 1.5px solid rgba(239,68,68,0.25);
+            color: #ef4444;
+            padding: 16px;
+            border-radius: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .btn-pd-delete:hover { background: #ef4444; color: #fff; transform: translateY(-3px); box-shadow: 0 10px 24px rgba(239,68,68,0.35); }
+
+        /* Carousel */
+        .pd-carousel { border-radius: 0; }
+        .pd-carousel .carousel-item {
+            transition: transform 0.55s ease-in-out !important;
+        }
+        .pd-carousel .carousel-item img {
+            width: 100%;
+            min-height: 480px;
+            object-fit: contain;
+            padding: 24px;
+            background: #060913;
+        }
+        /* Premium Carousel Controls */
+        .pd-carousel .carousel-control-prev,
+        .pd-carousel .carousel-control-next {
+            width: 44px;
+            height: 44px;
+            top: 50%;
+            margin-top: -22px;
+            bottom: auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 50%;
+            opacity: 0;
+            transition: all 0.3s;
+            position: absolute;
+        }
+        .pd-carousel .carousel-control-prev { left: 14px; right: auto; }
+        .pd-carousel .carousel-control-next { right: 14px; left: auto; }
+        /* Flip icons to point outward */
+        .pd-carousel .carousel-control-prev .carousel-control-prev-icon,
+        .pd-carousel .carousel-control-next .carousel-control-next-icon {
+            transform: scaleX(-1);
+        }
+        .pd-image-panel:hover .carousel-control-prev,
+        .pd-image-panel:hover .carousel-control-next { opacity: 1; }
+        .pd-carousel .carousel-control-prev:hover,
+        .pd-carousel .carousel-control-next:hover {
+            background: rgba(37,99,235,0.5);
+            border-color: rgba(37,99,235,0.6);
+        }
+        .carousel-indicators [data-bs-target] {
+            width: 24px; height: 4px; border-radius: 4px;
+            background: rgba(255,255,255,0.3);
+            border: none;
+            transition: all 0.3s;
+        }
+        .carousel-indicators .active {
+            background: #2563eb;
+            width: 36px;
         }
 
-        .stat-chip .label { font-size: 0.72rem; color: #64748b; display: block; margin-bottom: 5px; }
-        .stat-chip .value { font-size: 0.88rem; font-weight: 700; color: #e2e8f0; word-break: break-all; }
-
-        /* === Sticky Bottom Action Bar (Mobile) === */
-        .mobile-action-bar {
-            display: none;
+        /* Mobile */
+        @media (max-width: 991px) {
+            .pd-info-panel { padding: 28px 24px; gap: 18px; }
+            .pd-title { font-size: 1.9rem; }
+            .pd-image-panel { min-height: 320px; }
+            .pd-main-img { min-height: 320px; }
+            .pd-stats { grid-template-columns: 1fr 1fr; }
         }
-
         @media (max-width: 767px) {
-            .detail-card { padding: 16px; border-radius: 18px; }
-
-            .detail-card .desktop-actions { display: none !important; }
-
-            .mobile-action-bar {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                right: 0;
-                left: 0;
-                z-index: 999;
-                gap: 12px;
-                padding: 14px 16px;
-                background: rgba(10, 14, 26, 0.95);
-                backdrop-filter: blur(12px);
-                border-top: 1px solid rgba(255,255,255,0.07);
-                padding-bottom: calc(14px + env(safe-area-inset-bottom));
-            }
-
-            .mobile-action-bar .btn {
-                flex: 1;
-                padding: 13px;
-                border-radius: 14px;
-                font-weight: 700;
-                font-size: 0.95rem;
-            }
-
-            /* Give the page bottom space for the fixed bar */
-            .product-details-container {
-                padding-bottom: 90px;
-            }
-
-            .price-tag { font-size: 1.6rem; }
-
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .pd-title { font-size: 1.5rem; }
+            .pd-price { font-size: 1.8rem; }
+            .pd-info-panel { padding: 20px 16px; }
         }
 
-        /* Light Theme */
-        [data-theme="light"] .detail-card {
-            background: #ffffff;
-            border-color: #e2e8f0;
-        }
-        [data-theme="light"] .desc-box {
-            background: #f8fafc;
-            border-color: #e2e8f0;
-            color: #475569;
-        }
-        [data-theme="light"] .stat-chip {
-            background: #f8fafc;
-            border-color: #e2e8f0;
-        }
-        [data-theme="light"] .stat-chip .label { color: #94a3b8; }
-        [data-theme="light"] .stat-chip .value { color: #1e293b; }
-        [data-theme="light"] .info-chip { background: #f1f5f9; border-color: #e2e8f0; color: #475569; }
+        /* Light theme */
+        [data-theme="light"] .pd-glass-card { background: rgba(255,255,255,0.95); border-color: #e2e8f0; }
+        [data-theme="light"] .pd-image-panel { background: #f1f5f9; }
+        [data-theme="light"] .pd-desc { background: #f8fafc; border-color: #e2e8f0; color: #475569; }
+        [data-theme="light"] .pd-stat { background: #f8fafc; border-color: #e2e8f0; }
+        [data-theme="light"] .pd-stat .s-value { color: #1e293b; }
         [data-theme="light"] .size-pill { background: #f1f5f9; border-color: #e2e8f0; color: #334155; }
-        [data-theme="light"] .mobile-action-bar { background: rgba(255,255,255,0.97); border-top-color: #e2e8f0; }
     </style>
 </head>
 <body class="text-white">
+<div class="d-flex">
 
-    <div class="d-flex">
-        <!-- Sidebar Component -->
-        <nav class="sidebar p-3 d-none d-lg-block" style="width: 260px;">
-            <div class="text-center mb-4 mt-2">
-                <img src="../assets/logo.jpeg" alt="Marmoush Store Logo" style="width: 80px; height: 80px; border-radius: 50%; box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); margin-bottom: 10px;">
-                <h5 class="text-white mb-0 fw-bold">مرموش ستور</h5>
-            </div>
-            <ul class="nav flex-column mt-5">
-                <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
-                <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
-                <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
-                <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
-                <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
-                <li class="nav-item mt-4"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
-                <li class="nav-item"><a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
-            </ul>
-            <div class="mt-4 mb-3 border-top border-secondary pt-3">
-                <a href="#" class="nav-link text-danger fw-bold logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <div class="flex-grow-1 p-3 p-md-4" style="max-height: 100vh; overflow-y: auto;">
-            
-            <!-- Mobile Header -->
-            <div class="d-flex justify-content-between align-items-center d-lg-none mb-4">
-                <h5 class="mb-0 text-white fw-bold">مرموش ستور</h5>
-                <div class="d-flex align-items-center gap-2">
-                    <div class="theme-toggle m-0" title="تبديل الوضع">
-                        <i class='bx bx-sun'></i>
-                    </div>
-                    <div class="rounded-circle bg-dark border border-secondary d-flex align-items-center justify-content-center text-white"
-                        style="width: 35px; height: 35px; font-size: 0.9rem;">M</div>
-                    <button class="btn btn-outline-secondary p-1 px-2" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#sidebarMobile">
-                        <i class='bx bx-menu fs-4'></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Top Header -->
-            <div class="app-header d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h3 class="mb-1 fw-bold">تفاصيل المنتج</h3>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="products.html" class="text-primary text-decoration-none">إدارة المنتجات</a></li>
-                            <li class="breadcrumb-item active text-muted" aria-current="page">عرض المنتج</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div class="d-none d-lg-flex gap-2 align-items-center">
-                    <!-- Theme Toggle -->
-                    <div class="theme-toggle" title="تبديل الوضع">
-                        <i class='bx bx-sun'></i>
-                    </div>
-                    <button class="btn btn-outline-secondary fw-bold d-none d-md-inline-flex align-items-center gap-1" onclick="history.back()">
-                        <i class='bx bx-arrow-back'></i> رجوع
-                    </button>
-                    <button class="btn btn-primary fw-bold d-none d-md-inline-flex align-items-center gap-1" id="btn-edit-current">
-                        <i class='bx bx-edit-alt'></i> تعديل
-                    </button>
-                </div>
-            </div>
-
-            <!-- Content -->
-            <div id="product-details-content" class="product-details-container">
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    <p class="mt-3 text-muted">جاري تحميل بيانات المنتج...</p>
-                </div>
-            </div>
-
+    <!-- Sidebar Desktop -->
+    <nav class="sidebar p-3 d-none d-lg-block" style="width: 260px;">
+        <div class="text-center mb-4 mt-2">
+            <img src="../assets/logo.jpeg" alt="Logo" style="width: 80px; height: 80px; border-radius: 50%; box-shadow: 0 0 20px rgba(13,110,253,0.3);">
+            <h5 class="text-white mb-0 fw-bold mt-2">مرموش ستور</h5>
         </div>
-    </div>
+        <ul class="nav flex-column mt-4">
+            <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
+            <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
+            <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
+            <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
+            <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
+            <li class="nav-item mt-4"><a class="nav-link" href="settings.html"><i class='bx bx-cog'></i> الإعدادات</a></li>
+            <li class="nav-item"><a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
+        </ul>
+        <div class="mt-4 border-top border-secondary pt-3">
+            <a href="#" class="nav-link text-danger fw-bold logout-btn"><i class='bx bx-log-out'></i> تسجيل الخروج</a>
+        </div>
+    </nav>
 
-    <!-- Edit Product Modal -->
-    <div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content bg-dark text-white border-secondary">
-          <div class="modal-header border-secondary">
-            <h5 class="modal-title">تعديل المنتج</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <!-- Main -->
+    <div class="flex-grow-1 p-3 p-md-4" style="max-height:100vh; overflow-y:auto;">
+
+        <!-- Mobile Header -->
+        <div class="d-flex justify-content-between align-items-center d-lg-none mb-4">
+            <h5 class="mb-0 fw-bold">مرموش ستور</h5>
+            <div class="d-flex gap-2 align-items-center">
+                <div class="theme-toggle m-0"><i class='bx bx-sun'></i></div>
+                <button class="btn btn-outline-secondary p-1 px-2" data-bs-toggle="offcanvas" data-bs-target="#sidebarMobile">
+                    <i class='bx bx-menu fs-4'></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="app-header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="mb-1 fw-bold">تفاصيل المنتج</h3>
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="products.html" class="text-primary text-decoration-none">المنتجات</a></li>
+                    <li class="breadcrumb-item active text-muted">عرض</li>
+                </ol>
+            </div>
+            <div class="d-none d-lg-flex gap-2 align-items-center">
+                <div class="theme-toggle"><i class='bx bx-sun'></i></div>
+                <button class="btn btn-outline-secondary fw-bold px-4" onclick="history.back()">
+                    <i class='bx bx-arrow-back'></i> رجوع
+                </button>
+                <button class="btn btn-primary fw-bold px-4" id="btn-open-edit">
+                    <i class='bx bx-edit-alt'></i> تعديل البيانات
+                </button>
+            </div>
+        </div>
+
+        <!-- Content Injection Point -->
+        <div id="product-details-content" class="pd-wrapper">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary"></div>
+                <p class="mt-3 text-muted">جاري التحميل...</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0" style="background:#111827; border-radius:24px; overflow:hidden;">
+      <div class="modal-header border-0 px-4 pt-4 pb-2" style="background:linear-gradient(135deg,#1e3a8a,#1e293b);">
+        <div>
+            <h5 class="modal-title fw-bold text-white mb-0">تعديل بيانات المنتج</h5>
+            <p class="text-muted small mb-0 mt-1">عدّل البيانات ثم اضغط "حفظ التغييرات"</p>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4" style="background:#111827;">
+        <form id="edit-product-form">
+          <input type="hidden" id="edit-product-id">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-muted small fw-bold">اسم المنتج *</label>
+              <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" id="edit-product-name" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-muted small fw-bold">التصنيف</label>
+              <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" id="edit-product-category">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-muted small fw-bold">السعر الأصلي (ج.م)</label>
+              <input type="number" class="form-control bg-dark text-white border-secondary rounded-3" id="edit-product-price" step="0.01" min="0">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-muted small fw-bold">نسبة الخصم (%)</label>
+              <input type="number" class="form-control bg-dark text-white border-secondary rounded-3" id="edit-product-discount" min="0" max="100">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-muted small fw-bold">الألوان (افصل بفاصلة)</label>
+              <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" id="edit-product-colors" placeholder="أحمر, أزرق, أسود">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label text-muted small fw-bold">المقاسات (افصل بفاصلة)</label>
+              <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" id="edit-product-sizes" placeholder="S, M, L, XL">
+            </div>
+            <div class="col-12">
+              <label class="form-label text-muted small fw-bold">رابط الصورة الرئيسية</label>
+              <input type="url" class="form-control bg-dark text-white border-secondary rounded-3" id="edit-product-image" placeholder="https://...">
+            </div>
+            <div class="col-12">
+              <label class="form-label text-muted small fw-bold">وصف المنتج</label>
+              <textarea class="form-control bg-dark text-white border-secondary rounded-3" id="edit-product-description" rows="4"></textarea>
+            </div>
+            <div class="col-12">
+              <div class="d-flex justify-content-between align-items-center p-3 rounded-3" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);">
+                <span class="text-muted fw-bold">متوفر في المخزن</span>
+                <input class="form-check-input" type="checkbox" id="edit-product-availability" style="width:2.5rem; height:1.3rem; cursor:pointer;">
+              </div>
+            </div>
           </div>
-          <div class="modal-body p-4">
-            <form id="edit-product-form" novalidate>
-                <input type="hidden" id="edit-product-id">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted">اسم المنتج</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-product-name" required>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted">التصنيف</label>
-                        <div class="custom-dropdown category-dropdown" id="edit-category-dropdown-container">
-                            <div class="dropdown-selected bg-dark text-white border-secondary rounded p-2 d-flex align-items-center justify-content-between" style="cursor: pointer; border: 1px solid #444;">
-                                <span class="selected-text">اختر التصنيف</span>
-                                <i class='bx bx-chevron-down'></i>
-                            </div>
-                            <div class="dropdown-options bg-dark border-secondary rounded shadow-lg d-none" style="position: absolute; z-index: 1000; width: 100%; max-height: 200px; overflow-y: auto; border: 1px solid #444; margin-top: 5px;">
-                                <!-- Options will be injected here -->
-                            </div>
-                            <input type="hidden" id="edit-product-category" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted">السعر الأصلي (جنيه)</label>
-                        <input type="number" class="form-control bg-dark text-white border-secondary" id="edit-product-price" step="0.01">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted">نسبة الخصم (%)</label>
-                        <input type="number" class="form-control bg-dark text-white border-secondary" id="edit-product-discount">
-                    </div>
-                    <!-- New Fields -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted">رقم SKU</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-product-sku">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label text-muted">الألوان المتاحة (افصل بفاصلة)</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" id="edit-product-colors">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label class="form-label text-muted">المقاسات المتاحة</label>
-                        <div class="d-flex flex-wrap gap-2">
-                            <div class="form-check">
-                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="S" id="edit-size-s">
-                                <label class="form-check-label text-muted" for="edit-size-s">S</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="M" id="edit-size-m">
-                                <label class="form-check-label text-muted" for="edit-size-m">M</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="L" id="edit-size-l">
-                                <label class="form-check-label text-muted" for="edit-size-l">L</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="XL" id="edit-size-xl">
-                                <label class="form-check-label text-muted" for="edit-size-xl">XL</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input edit-size-checkbox" type="checkbox" value="XXL" id="edit-size-xxl">
-                                <label class="form-check-label text-muted" for="edit-size-xxl">XXL</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label class="form-label text-muted d-block">الصورة الرئيسية الحالية</label>
-                        <div id="edit-img-preview" class="mb-2"></div>
-                        <input type="url" class="form-control bg-dark text-white border-secondary mb-3" id="edit-product-image-url" placeholder="رابط الصورة الرئيسية الجديد">
-                    </div>
-                    <div class="col-12 mb-3">
-                        <label class="form-label text-muted d-flex justify-content-between">
-                            <span>صور إضافية (Gallery)</span>
-                            <button type="button" class="btn btn-sm btn-outline-primary" id="edit-add-gallery-field">
-                                <i class='bx bx-plus'></i> إضافة صورة
-                            </button>
-                        </label>
-                        <div id="edit-gallery-inputs-container" class="mt-2">
-                            <!-- Dynamic inputs will be added here -->
-                        </div>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <div class="form-check form-switch p-0 d-flex justify-content-between align-items-center">
-                            <label class="form-check-label text-muted" for="edit-product-availability">متوفر في المخزن</label>
-                            <input class="form-check-input ms-0" type="checkbox" id="edit-product-availability">
-                        </div>
-                    </div>
-                    <div class="col-12 mb-4">
-                        <label class="form-label text-muted">وصف المنتج</label>
-                        <textarea class="form-control bg-dark text-white border-secondary" id="edit-product-description" rows="3"></textarea>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-success w-100 py-2">تحديث المنتج</button>
-            </form>
+          <div class="d-flex gap-3 mt-4">
+            <button type="button" class="btn btn-outline-secondary flex-grow-1 py-3 rounded-3" data-bs-dismiss="modal">إلغاء</button>
+            <button type="submit" class="btn btn-primary flex-grow-2 py-3 fw-bold rounded-3" id="edit-submit-btn" style="flex:2;">
+                <i class='bx bx-save me-1'></i> حفظ التغييرات
+            </button>
           </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content border-0" style="background:#111827; border-radius:24px; border:1px solid rgba(239,68,68,0.2);">
+      <div class="modal-body p-4 text-center">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width:80px;height:80px;background:rgba(239,68,68,0.1);">
+            <i class='bx bx-trash text-danger' style="font-size:38px;"></i>
+        </div>
+        <h5 class="fw-bold mb-2">تأكيد الحذف</h5>
+        <p class="text-muted small mb-4">سيتم أرشفة هذا المنتج ولن يظهر في المتجر.</p>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary w-100 py-2 rounded-3" data-bs-dismiss="modal">إلغاء</button>
+            <button class="btn btn-danger w-100 py-2 fw-bold rounded-3" id="confirm-delete-btn">حذف</button>
         </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content bg-dark text-white border-danger border-opacity-25" style="border-radius: 20px; overflow: hidden;">
-          <div class="modal-body p-4 text-center">
-            <div class="mb-3">
-                <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-circle" style="width: 80px; height: 80px;">
-                    <i class='bx bx-trash text-danger shadow-sm' style="font-size: 40px;"></i>
-                </div>
-            </div>
-            <h4 class="fw-bold mb-2">هل أنت متأكد؟</h4>
-            <p class="text-muted mb-4">هذا الإجراء لا يمكن التراجع عنه وسيتم حذف البيانات نهائياً.</p>
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-outline-secondary w-100 py-2 border-0" data-bs-dismiss="modal" style="border-radius: 12px;">إلغاء</button>
-                <button type="button" id="confirm-delete-btn" class="btn btn-danger w-100 py-2 shadow-sm" style="border-radius: 12px;">حذف الآن</button>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- Mobile Offcanvas -->
+<div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="sidebarMobile">
+    <div class="offcanvas-header border-bottom border-secondary">
+        <h5 class="offcanvas-title">مرموش ستور</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
-
-    <!-- Mobile Offcanvas Sidebar -->
-    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="sidebarMobile">
-        <div class="offcanvas-header border-bottom border-secondary">
-            <h5 class="offcanvas-title">مرموش ستور</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body sidebar">
-            <ul class="nav flex-column mt-3">
-                <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
-                <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
-                <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
-                <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
-                <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
-                <li class="nav-item mt-4"><a class="nav-link" href="settings.html"><i class='bx bx-message-square-dots'></i> إعدادات التواصل</a></li>
-                <li class="nav-item"><a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
-                <li class="nav-item mt-4"><a class="nav-link text-danger fw-bold logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
-            </ul>
-        </div>
+    <div class="offcanvas-body sidebar">
+        <ul class="nav flex-column mt-2">
+            <li class="nav-item"><a class="nav-link" href="index.html"><i class='bx bx-grid-alt'></i> لوحة التحكم</a></li>
+            <li class="nav-item"><a class="nav-link active" href="products.html"><i class='bx bx-package'></i> المنتجات</a></li>
+            <li class="nav-item"><a class="nav-link" href="categories.html"><i class='bx bx-category'></i> التصنيفات</a></li>
+            <li class="nav-item"><a class="nav-link" href="banners.html"><i class='bx bx-image'></i> إدارة البانرات</a></li>
+            <li class="nav-item"><a class="nav-link" href="admins.html"><i class='bx bx-user-plus'></i> إدارة المديرين</a></li>
+            <li class="nav-item mt-4"><a class="nav-link" href="settings.html"><i class='bx bx-cog'></i> الإعدادات</a></li>
+            <li class="nav-item"><a class="nav-link" href="profile.html"><i class='bx bx-user-circle'></i> حسابي</a></li>
+            <li class="nav-item mt-4"><a class="nav-link text-danger fw-bold logout-btn" href="#"><i class='bx bx-log-out'></i> تسجيل الخروج</a></li>
+        </ul>
     </div>
+</div>
 
-    <!-- Toast Notification -->
-    <div class="toast-container-custom" id="toast-notification">
-        <div class="custom-toast" id="toast-body">
-            <i class='bx bx-check-circle icon'></i>
-            <span>تم الإجراء بنجاح</span>
-        </div>
+<!-- Toast -->
+<div class="toast-container-custom" id="toast-notification">
+    <div class="custom-toast" id="toast-body">
+        <i class='bx bx-check-circle icon'></i>
+        <span>تم الإجراء بنجاح</span>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Firebase Compat SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script type="module" src="../js/pages/dashboard.js"></script>
-    <script type="module" src="../js/pages/product-details.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script type="module" src="../js/pages/dashboard.js"></script>
+<script type="module" src="../js/pages/product-details.js"></script>
 </body>
 </html>

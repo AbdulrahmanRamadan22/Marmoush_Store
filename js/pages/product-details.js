@@ -4,245 +4,266 @@ import { showToast } from '../ui/renderProducts.js';
 import { db } from '../firebase.js';
 import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('id');
+// ─── State ───────────────────────────────────────────────────────────────────
+let currentProduct = null;
+const editModal = () => bootstrap.Modal.getOrCreateInstance(document.getElementById('editProductModal'));
+const deleteModal = () => bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteConfirmModal'));
 
-    if (!productId) {
-        showError("لم يتم العثور على معرف المنتج");
-        return;
-    }
+// ─── Init ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+    const productId = new URLSearchParams(window.location.search).get('id');
+    if (!productId) return showError("لم يتم العثور على معرف المنتج");
+
+    // Silent view counter increment
+    updateDoc(doc(db, 'products', productId), { views: increment(1) }).catch(() => {});
 
     try {
-        // Increment views counter silently
-        await updateDoc(doc(db, 'products', productId), { views: increment(1) })
-            .catch(() => {}); // Silent fail — don't block if field doesn't exist
-
-        const product = await getProductById(productId);
-        if (!product) {
-            showError("المنتج غير موجود في قاعدة البيانات");
-            return;
-        }
-
-        renderProductDetails(product);
-    } catch (error) {
-        console.error(error);
+        currentProduct = await getProductById(productId);
+        if (!currentProduct) return showError("المنتج غير موجود في قاعدة البيانات");
+        renderProductDetails(currentProduct);
+        setupGlobalListeners();
+    } catch (err) {
+        console.error(err);
         showError("حدث خطأ أثناء تحميل بيانات المنتج");
     }
 });
 
+// ─── Render ───────────────────────────────────────────────────────────────────
 function renderProductDetails(product) {
     const container = document.getElementById('product-details-content');
-    
-    // Pricing logic
-    const originalPrice = parseFloat(product.originalPrice || 0);
-    const discountPercentage = parseFloat(product.discountPercentage || 0);
-    const hasDiscount = discountPercentage > 0;
-    const finalPrice = hasDiscount 
-        ? (originalPrice - (originalPrice * (discountPercentage / 100))).toFixed(2) 
-        : originalPrice;
-
     const isAvailable = product.isAvailable !== false;
+    const originalPrice = parseFloat(product.originalPrice || 0);
+    const discount = parseFloat(product.discountPercentage || 0);
+    const hasDiscount = discount > 0;
+    const finalPrice = hasDiscount
+        ? (originalPrice - originalPrice * discount / 100).toFixed(2)
+        : originalPrice.toFixed(2);
 
-    // --- 1. Gallery Carousel Logic ---
-    const allImages = [product.image].concat(product.gallery || []).filter(url => url);
-    let galleryHtml = '';
-    
+    // ── Gallery HTML ──
+    const allImages = [product.image, ...(product.gallery || [])].filter(Boolean);
+    let galleryHtml;
     if (allImages.length > 1) {
-        let indicators = '';
-        let innerItems = '';
-        allImages.forEach((img, index) => {
-            indicators += `<button type="button" data-bs-target="#productGallery" data-bs-slide-to="${index}" class="${index === 0 ? 'active' : ''}"></button>`;
-            innerItems += `
-                <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                    <img src="${img}" class="d-block w-100 product-main-img shadow-lg" alt="Product Image" style="object-fit: cover; aspect-ratio: 1/1;">
-                </div>
-            `;
-        });
-        
+        const indicators = allImages.map((_, i) =>
+            `<button type="button" data-bs-target="#pdCarousel" data-bs-slide-to="${i}" ${i === 0 ? 'class="active"' : ''}></button>`
+        ).join('');
+        const items = allImages.map((img, i) => `
+            <div class="carousel-item ${i === 0 ? 'active' : ''}">
+                <img src="${img}" alt="صورة ${i + 1}">
+            </div>`
+        ).join('');
         galleryHtml = `
-            <div id="productGallery" class="carousel slide" data-bs-ride="carousel">
+            <div id="pdCarousel" class="carousel slide pd-carousel" data-bs-ride="carousel">
                 <div class="carousel-indicators">${indicators}</div>
-                <div class="carousel-inner rounded-4 overflow-hidden">${innerItems}</div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#productGallery" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                <div class="carousel-inner">${items}</div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#pdCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#productGallery" data-bs-slide="next">
-                    <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
+                <button class="carousel-control-next" type="button" data-bs-target="#pdCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
                 </button>
-            </div>
-        `;
+            </div>`;
     } else {
-        // Fallback to single image
-        galleryHtml = `<img src="${product.image || 'https://via.placeholder.com/600'}" alt="${product.name}" class="product-main-img shadow-lg w-100 rounded-4" style="object-fit: cover; aspect-ratio: 1/1;">`;
+        galleryHtml = `<img src="${product.image || '../assets/placeholder.png'}" class="pd-main-img" alt="${product.name}">`;
     }
 
-    // --- 2. Sizes & Colors HTML ---
-    let sizesHtml = '';
-    if (product.sizes && product.sizes.length > 0) {
-        const badges = product.sizes.map(s => `<span class="badge bg-secondary text-white px-3 py-2 fs-6 me-1">${s}</span>`).join('');
-        sizesHtml = `
-            <div class="mb-4">
-                <h6 class="text-muted fw-bold mb-2">المقاسات المتوفرة:</h6>
-                <div>${badges}</div>
-            </div>
-        `;
-    }
-
-    let colorsHtml = '';
-    if (product.colors && product.colors.length > 0) {
-        const colorBadges = product.colors.map(c => `<span class="badge border border-secondary text-primary bg-dark bg-opacity-50 px-3 py-2 fs-6 me-1">${c}</span>`).join('');
-        colorsHtml = `
-            <div class="mb-4">
-                <h6 class="text-muted fw-bold mb-2">الألوان المتوفرة:</h6>
-                <div>${colorBadges}</div>
-            </div>
-        `;
-    }
+    // ── Pills ──
+    const sizes = (product.sizes || []).map(s => `<span class="size-pill">${s}</span>`).join('');
+    const colors = (product.colors || []).map(c => `<span class="color-pill">${c}</span>`).join('');
 
     container.innerHTML = `
-        <div class="detail-card">
-            <div class="row g-4">
-                <!-- Image Section -->
-                <div class="col-md-5">
-                    <div class="product-hero-img-wrap">
+        <div class="pd-glass-card">
+            <div class="row g-0">
+                <!-- Image Panel -->
+                <div class="col-lg-5">
+                    <div class="pd-image-panel">
+                        <div class="pd-status-badge">
+                            <span class="pulse ${isAvailable ? 'green' : 'red'}"></span>
+                            <span>${isAvailable ? 'متوفر بالمخزن' : 'غير متوفر'}</span>
+                        </div>
                         ${galleryHtml}
                     </div>
                 </div>
-                
-                <!-- Info Section -->
-                <div class="col-md-7">
-                    <!-- Meta Strip -->
-                    <div class="product-meta-strip">
-                        <span class="category-badge"><i class='bx bx-category-alt me-1'></i>${product.category || 'عام'}</span>
-                        <span class="status-badge ${isAvailable ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25'}">
-                            <i class='bx ${isAvailable ? 'bx-check-circle' : 'bx-x-circle'} me-1'></i>
-                            ${isAvailable ? 'متوفر بالمخزن' : 'غير متوفر'}
+
+                <!-- Info Panel -->
+                <div class="col-lg-7">
+                    <div class="pd-info-panel">
+
+                        <!-- Category -->
+                        <span class="pd-category-tag">
+                            <i class='bx bx-purchase-tag-alt'></i>
+                            ${product.category || 'عام'}
                         </span>
-                    </div>
 
-                    <!-- Name -->
-                    <h1 class="fw-bold mb-1 text-white fs-3">${product.name}</h1>
-                    ${product.sku ? `<p class="mb-3"><span class="info-chip"><i class='bx bx-barcode'></i> SKU: ${product.sku}</span></p>` : ''}
+                        <!-- Title -->
+                        <h1 class="pd-title">${product.name}</h1>
 
-                    <!-- Price -->
-                    <div class="price-block">
-                        <span class="price-tag">${finalPrice} <small style="font-size:0.95rem;font-weight:600;">ج.م</small></span>
-                        ${hasDiscount ? `
-                            <span class="old-price-tag">${originalPrice} ج.م</span>
-                            <span class="badge bg-danger rounded-pill px-3 py-2">خصم ${discountPercentage}%</span>
-                        ` : ''}
-                    </div>
-
-                    <!-- Sizes -->
-                    ${product.sizes && product.sizes.length > 0 ? `
-                    <div class="mb-4">
-                        <p class="text-muted small fw-bold mb-2"><i class='bx bx-ruler me-1'></i>المقاسات المتوفرة</p>
-                        <div class="pill-group">
-                            ${product.sizes.map(s => `<span class="size-pill">${s}</span>`).join('')}
+                        <!-- Price -->
+                        <div class="pd-price-box">
+                            <span class="pd-price">${finalPrice} <small style="font-size:1rem;font-weight:600;">ج.م</small></span>
+                            ${hasDiscount ? `
+                                <span class="pd-old-price">${originalPrice} ج.م</span>
+                                <span class="pd-discount-badge">خصم ${discount}%</span>
+                            ` : ''}
                         </div>
-                    </div>` : ''}
 
-                    <!-- Colors -->
-                    ${product.colors && product.colors.length > 0 ? `
-                    <div class="mb-4">
-                        <p class="text-muted small fw-bold mb-2"><i class='bx bx-palette me-1'></i>الألوان المتوفرة</p>
-                        <div class="pill-group">
-                            ${product.colors.map(c => `<span class="color-pill">${c}</span>`).join('')}
+                        <!-- Sizes -->
+                        ${sizes ? `
+                        <div>
+                            <div class="pd-section-label"><i class='bx bx-ruler'></i> المقاسات</div>
+                            <div class="pill-wrap">${sizes}</div>
+                        </div>` : ''}
+
+                        <!-- Colors -->
+                        ${colors ? `
+                        <div>
+                            <div class="pd-section-label"><i class='bx bx-palette'></i> الألوان</div>
+                            <div class="pill-wrap">${colors}</div>
+                        </div>` : ''}
+
+                        <!-- Description -->
+                        <div>
+                            <div class="pd-section-label"><i class='bx bx-align-right'></i> وصف المنتج</div>
+                            <div class="pd-desc">${product.description ? product.description.replace(/\n/g, '<br>') : 'لا يوجد وصف متاح.'}</div>
                         </div>
-                    </div>` : ''}
 
-                    <!-- Description -->
-                    <div class="mb-4">
-                        <p class="text-muted small fw-bold mb-2"><i class='bx bx-file-blank me-1'></i>وصف المنتج</p>
-                        <div class="desc-box">${product.description || 'لا يوجد وصف متاح لهذا المنتج.'}</div>
-                    </div>
+                        <!-- Stats -->
+                        <div class="pd-stats">
+                            <div class="pd-stat">
+                                <span class="s-label">تاريخ الإضافة</span>
+                                <span class="s-value">${product.createdAt ? new Date(product.createdAt).toLocaleDateString('ar-EG') : '-'}</span>
+                            </div>
+                            <div class="pd-stat">
+                                <span class="s-label">المشاهدات</span>
+                                <span class="s-value">${(product.views || 0).toLocaleString('ar-EG')} 👁</span>
+                            </div>
+                            <div class="pd-stat">
+                                <span class="s-label">حالة العرض</span>
+                                <span class="s-value ${isAvailable ? 'text-success' : 'text-danger'}">${isAvailable ? 'نشط ✓' : 'متوقف ✗'}</span>
+                            </div>
+                        </div>
 
-                    <!-- Desktop Action Buttons -->
-                    <div class="d-flex gap-3 desktop-actions mt-4">
-                        <button class="btn btn-outline-danger px-4 py-2 flex-grow-1" id="btn-delete-product">
-                            <i class='bx bx-trash'></i> حذف المنتج
-                        </button>
-                        <button class="btn btn-primary px-4 py-2 flex-grow-1 btn-edit-product" data-id="${product.id}">
-                            <i class='bx bx-edit'></i> تعديل البيانات
-                        </button>
+                        <!-- Actions -->
+                        <div class="pd-actions">
+                            <button class="btn-pd-edit" id="btn-open-edit-inline">
+                                <i class='bx bx-edit-alt fs-5'></i> تعديل البيانات
+                            </button>
+                            <button class="btn-pd-delete" id="btn-open-delete">
+                                <i class='bx bx-trash fs-5'></i>
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             </div>
-
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-chip">
-                    <span class="label">تاريخ الإضافة</span>
-                    <span class="value">${product.createdAt ? new Date(product.createdAt).toLocaleDateString('ar-EG') : 'غير متوفر'}</span>
-                </div>
-                <div class="stat-chip">
-                    <span class="label">المشاهدات</span>
-                    <span class="value">${(product.views || 0).toLocaleString('ar-EG')} 👁</span>
-                </div>
-                <div class="stat-chip">
-                    <span class="label">حالة العرض</span>
-                    <span class="value ${isAvailable ? 'text-success' : 'text-danger'}">${isAvailable ? 'نشط ✓' : 'متوقف ✗'}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Sticky Action Bar -->
-        <div class="mobile-action-bar">
-            <button class="btn btn-outline-danger" id="btn-delete-product-mobile">
-                <i class='bx bx-trash'></i> حذف
-            </button>
-            <button class="btn btn-outline-secondary" onclick="history.back()">
-                <i class='bx bx-arrow-back'></i> رجوع
-            </button>
-            <button class="btn btn-primary btn-edit-product" data-id="${product.id}" id="btn-edit-mobile">
-                <i class='bx bx-edit'></i> تعديل
-            </button>
         </div>
     `;
 
-    // Handle Delete (desktop)
-    const deleteHandler = () => {
-        if (window.requestDelete) {
-            window.requestDelete(async () => {
-                await deleteProduct(product.id);
-                showToast("تم حذف المنتج بنجاح");
-                setTimeout(() => window.location.href = 'products.html', 1000);
-            });
-        } else {
-            if (confirm("هل أنت متأكد من الحذف؟")) {
-                deleteProduct(product.id).then(() => {
-                    showToast("تم حذف المنتج بنجاح");
-                    window.location.href = 'products.html';
-                });
-            }
-        }
+    // Bind inline buttons after render
+    document.getElementById('btn-open-edit-inline')?.addEventListener('click', openEditModal);
+    document.getElementById('btn-open-delete')?.addEventListener('click', openDeleteModal);
+}
+
+// ─── Global Listeners (for static header buttons) ─────────────────────────────
+function setupGlobalListeners() {
+    // Header edit button (desktop)
+    document.getElementById('btn-open-edit')?.addEventListener('click', openEditModal);
+
+    // Edit form submit
+    document.getElementById('edit-product-form').addEventListener('submit', handleEditSubmit);
+
+    // Delete confirm button
+    document.getElementById('confirm-delete-btn').addEventListener('click', handleConfirmDelete);
+}
+
+// ─── Open Edit Modal ──────────────────────────────────────────────────────────
+function openEditModal() {
+    if (!currentProduct) return;
+
+    document.getElementById('edit-product-id').value          = currentProduct.id;
+    document.getElementById('edit-product-name').value        = currentProduct.name || '';
+    document.getElementById('edit-product-category').value    = currentProduct.category || '';
+    document.getElementById('edit-product-price').value       = currentProduct.originalPrice || '';
+    document.getElementById('edit-product-discount').value    = currentProduct.discountPercentage || '';
+    document.getElementById('edit-product-colors').value      = (currentProduct.colors || []).join(', ');
+    document.getElementById('edit-product-sizes').value       = (currentProduct.sizes || []).join(', ');
+    document.getElementById('edit-product-image').value       = currentProduct.image || '';
+    document.getElementById('edit-product-description').value = currentProduct.description || '';
+    document.getElementById('edit-product-availability').checked = currentProduct.isAvailable !== false;
+
+    editModal().show();
+}
+
+// ─── Handle Edit Submit ───────────────────────────────────────────────────────
+async function handleEditSubmit(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('edit-submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>جاري الحفظ...';
+
+    const sizesRaw = document.getElementById('edit-product-sizes').value;
+    const colorsRaw = document.getElementById('edit-product-colors').value;
+
+    const updatedData = {
+        name:               document.getElementById('edit-product-name').value.trim(),
+        category:           document.getElementById('edit-product-category').value.trim(),
+        originalPrice:      parseFloat(document.getElementById('edit-product-price').value) || 0,
+        discountPercentage: parseFloat(document.getElementById('edit-product-discount').value) || 0,
+        image:              document.getElementById('edit-product-image').value.trim(),
+        description:        document.getElementById('edit-product-description').value.trim(),
+        isAvailable:        document.getElementById('edit-product-availability').checked,
+        sizes:  sizesRaw  ? sizesRaw.split(',').map(s => s.trim()).filter(Boolean)  : [],
+        colors: colorsRaw ? colorsRaw.split(',').map(c => c.trim()).filter(Boolean) : [],
+        updatedAt: new Date().toISOString()
     };
 
-    const deleteBtn = document.getElementById('btn-delete-product');
-    if (deleteBtn) deleteBtn.onclick = deleteHandler;
-
-    // Handle Delete (mobile sticky bar)
-    const deleteBtnMobile = document.getElementById('btn-delete-product-mobile');
-    if (deleteBtnMobile) deleteBtnMobile.onclick = deleteHandler;
-
-    // Handle Edit from top header
-    const editBtn = document.getElementById('btn-edit-current');
-    if (editBtn) {
-        editBtn.classList.add('btn-edit-product');
-        editBtn.dataset.id = product.id;
+    try {
+        await updateProduct(currentProduct.id, updatedData);
+        showToast("✅ تم تحديث بيانات المنتج بنجاح");
+        editModal().hide();
+        // Refresh data and re-render
+        currentProduct = await getProductById(currentProduct.id);
+        renderProductDetails(currentProduct);
+        // Re-bind inline buttons
+        document.getElementById('btn-open-edit-inline')?.addEventListener('click', openEditModal);
+        document.getElementById('btn-open-delete')?.addEventListener('click', openDeleteModal);
+    } catch (err) {
+        console.error(err);
+        showToast("❌ فشل التحديث، حاول مرة أخرى");
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bx bx-save me-1"></i> حفظ التغييرات';
     }
 }
 
+// ─── Open Delete Modal ────────────────────────────────────────────────────────
+function openDeleteModal() {
+    deleteModal().show();
+}
+
+// ─── Handle Confirm Delete ────────────────────────────────────────────────────
+async function handleConfirmDelete() {
+    const btn = document.getElementById('confirm-delete-btn');
+    btn.disabled = true;
+    btn.innerText = 'جاري الحذف...';
+    try {
+        await deleteProduct(currentProduct.id);
+        deleteModal().hide();
+        showToast("تم أرشفة المنتج بنجاح");
+        setTimeout(() => window.location.href = 'products.html', 1200);
+    } catch (err) {
+        console.error(err);
+        showToast("❌ فشل الحذف، حاول مرة أخرى");
+        btn.disabled = false;
+        btn.innerText = 'حذف';
+    }
+}
+
+// ─── Error View ───────────────────────────────────────────────────────────────
 function showError(message) {
-    const container = document.getElementById('product-details-content');
-    container.innerHTML = `
+    document.getElementById('product-details-content').innerHTML = `
         <div class="text-center py-5">
-            <i class='bx bx-error-circle text-danger' style="font-size: 4rem;"></i>
+            <i class='bx bx-error-circle text-danger' style="font-size:4rem;"></i>
             <h4 class="mt-3">${message}</h4>
-            <button class="btn btn-primary mt-3" onclick="window.location.href='products.html'">العودة للمنتجات</button>
-        </div>
-    `;
+            <a href="products.html" class="btn btn-primary mt-3 px-4 rounded-3">العودة للمنتجات</a>
+        </div>`;
 }
